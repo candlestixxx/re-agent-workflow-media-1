@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - Magnific AI Live Adapter
+### Added
+- Integrated `axios` dependency for making live network calls.
+- Upgraded `MagnificAiService` to actively trigger HTTP POSTs to `api.magnific.ai` when a valid `MAGNIFIC_API_KEY` is present.
+- Improved unit testing suite to mock Axios responses for continuous offline capability mapping.
+
 ## [1.4.0] - Phase 6 Planning
 ### Added
 - Outlined Phase 6 goals ("Live API Integration") inside `ROADMAP.md`, `TODO.md`, and `HANDOFF.md` to guide the next iteration cycle.

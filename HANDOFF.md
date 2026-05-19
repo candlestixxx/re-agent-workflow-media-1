@@ -29,9 +29,9 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented `BatchProcessingService` to process queue arrays of property addresses, safely wrapping individual errors/missing folders so that the batch doesn't crash entirely.
 
 ## Known Limitations / Gaps
-- The actual live API HTTP integrations with Magnific, Canva, Facebook, LinkedIn, and Lofty are pending. Service classes use mock logic and `.env` flags instead of real HTTP requests to avoid committing secrets or requiring real tokens in CI.
-- The system currently represents a fully tested orchestration skeleton (v1.3.0), but visual processing engines (FFmpeg, live SDKs) still need to be swapped in for the final production deployment.
-- No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
+- The actual live API HTTP integrations with Canva, Facebook, LinkedIn, and Lofty are pending. Service classes use mock logic and `.env` flags instead of real HTTP requests to avoid committing secrets or requiring real tokens in CI.
+- The system currently represents a fully tested orchestration skeleton (v1.5.0), but visual processing engines (FFmpeg, live SDKs) still need to be swapped in for the final production deployment.
+- No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps
-- Phase 6 (Live API Integration): Swap out `MagnificAiService`, `CanvaIntegrationService`, `SocialCopyService`, `LoftyIntegrationService`, and `SocialPublishingService` mocks for live HTTP request logic using valid API tokens.
+- Phase 6 (Live API Integration): Swap out `CanvaIntegrationService`, `SocialCopyService`, `LoftyIntegrationService`, and `SocialPublishingService` mocks for live HTTP request logic using valid API tokens.

@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export class MagnificAiService {
   /**
    * Generates enhanced image variations based on a source photo using Magnific AI.
@@ -22,15 +24,34 @@ export class MagnificAiService {
       );
     }
 
-    // In a production environment, this is where the `fetch` or `axios` call
-    // to the Magnific AI endpoint would go, passing the source image and prompt.
-    // e.g., POST https://api.magnific.ai/...
-
     const results: string[] = [];
 
     for (let i = 0; i < variations; i++) {
-      // Simulating network delay and response parsing
-      results.push(`[API_RESPONSE] Enhanced ${style} image buffer ${i + 1} from ${sourceImagePath}`);
+      try {
+        const response = await axios.post(
+          'https://api.magnific.ai/v1/generate',
+          {
+            image_path: sourceImagePath,
+            style: style,
+            model: model,
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.data && response.data.output_url) {
+          results.push(response.data.output_url);
+        } else {
+          // If the real API responds but misses the expected payload, we log the failure.
+          results.push(`[API_ERROR] Unexpected payload format for variation ${i + 1}`);
+        }
+      } catch (error) {
+        results.push(`[API_ERROR] Failed to fetch live variation ${i + 1} from Magnific`);
+      }
     }
 
     return results;
