@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - Social Copy Live Adapter
+### Added
+- Upgraded `SocialCopyService` to execute active `axios` REST calls targeting OpenAI's `v1/chat/completions` API endpoint when `OPENAI_API_KEY` is present.
+- Updated tests to safely isolate HTTP boundaries while verifying valid GPT model and role configurations.
+
 ## [1.6.0] - Canva API Live Adapter
 ### Added
 - Upgraded `CanvaIntegrationService` to execute active `axios` REST calls mapping to Canva's `api.canva.com/rest/v1/autocreates` design generation endpoints.

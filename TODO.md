@@ -16,6 +16,6 @@
 12. **Implement Batch Processing**: Allow iterating array queues of addresses to concurrently spawn tracking Jobs. (Completed)
 13. **Wire Live SDK: Magnific AI**: Build `axios`/`fetch` requests inside `MagnificAiService` using `process.env.MAGNIFIC_API_KEY`. (Completed)
 14. **Wire Live SDK: Canva**: Build template export API requests inside `CanvaIntegrationService`. (Completed)
-15. **Wire Live SDK: Gemini/OpenAI**: Build completion API requests inside `SocialCopyService` for dynamic captions.
+15. **Wire Live SDK: Gemini/OpenAI**: Build completion API requests inside `SocialCopyService` for dynamic captions. (Completed)
 16. **Wire Live SDK: Lofty**: Build POST payload dispatch logic inside `LoftyIntegrationService`.
 17. **Wire Live SDK: Social Networks**: Build OAuth/Graph API routes inside `SocialPublishingService` to push payloads to live platform profiles.
