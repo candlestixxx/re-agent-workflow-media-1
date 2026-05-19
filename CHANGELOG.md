@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - Canva Integration Stub Adapter
+### Added
+- Implemented `CanvaIntegrationService` (`src/services/CanvaIntegrationService.ts`) to handle mock asset generation and local directory routing based on Canva templates.
+- Added tests asserting fallback logic functionality depending on `CANVA_API_KEY` configuration.
+
 ## [0.8.0] - Magnific AI Stub Adapter
 ### Added
 - Implemented `MagnificAiService` to simulate fetching day and night image generation buffers.

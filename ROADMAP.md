@@ -9,7 +9,7 @@
 ## Phase 2: AI & Image Enhancement
 - ✅ Integrate Magnific AI for day/night image generation (Stage C).
 - ✅ Implement file downloading and saving logic back to listing folders (Stage D).
-- ⬜ Build Canva integration or manual handoff workflow (Stage E).
+- ✅ Build Canva integration or manual handoff workflow (Stage E).
 
 ## Phase 3: Landing Pages & Copy
 - ⬜ Integrate Lofty API for landing page creation and updating (Stage F).
