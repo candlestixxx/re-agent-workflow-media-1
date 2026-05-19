@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - Foundation Skeleton Complete
+### Added
+- Implemented `SocialPublishingService` (`src/services/SocialPublishingService.ts`) to finalize the pipeline's end-to-end mock architecture.
+- Added network simulation routing ensuring drafts target correct external platforms (Facebook, LinkedIn, Instagram, X).
+- Checked off Phase 4 of `ROADMAP.md`.
+
 ## [0.9.0] - Canva Integration Stub Adapter
 ### Added
 - Implemented `CanvaIntegrationService` (`src/services/CanvaIntegrationService.ts`) to handle mock asset generation and local directory routing based on Canva templates.

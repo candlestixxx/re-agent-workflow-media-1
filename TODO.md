@@ -10,3 +10,4 @@
 6. **Implement Approval Logic**: Add state transition logic to `ListingMediaJob` requiring approval before moving to "Published" status. (Completed)
 7. **Expand Pipeline for Video**: Begin drafting data models and workflow steps for video processing (parallel to image logic). (Completed)
 8. **Implement Magnific AI Integration**: Build the API wrapper stub for generating day/night variations of listing source images. (Completed)
+9. **Implement Social Publishing Queue**: Build adapters to simulate pushing completed SocialPostDrafts to target external networks. (Completed)

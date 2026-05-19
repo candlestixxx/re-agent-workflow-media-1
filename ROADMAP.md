@@ -16,9 +16,9 @@
 - ⬜ Integrate Gemini/ChatGPT for social description generation (Stage G).
 
 ## Phase 4: Publishing & Approvals
-- ⬜ Implement social publishing queue for Facebook, LinkedIn, Instagram (Stage H).
-- ⬜ Build out full approval and compliance workflow.
-- ⬜ Add video processing capabilities parallel to image generation.
+- ✅ Implement social publishing queue for Facebook, LinkedIn, Instagram (Stage H).
+- ✅ Build out full approval and compliance workflow.
+- ✅ Add video processing capabilities parallel to image generation.
 
 ## Phase 5: Advanced Automation
 - ⬜ Full CRM trigger integration (e.g., auto-start pipeline on new listing).
