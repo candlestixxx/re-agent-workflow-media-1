@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - Advanced Automation Triggers
+### Added
+- Implemented `AutomationTriggerService` (`src/services/AutomationTriggerService.ts`) to intercept CRM webhooks and construct workflow jobs.
+- Added tests asserting payload constraints and conditional mappings depending on the webhook event.
+
 ## [1.0.0] - Foundation Skeleton Complete
 ### Added
 - Implemented `SocialPublishingService` (`src/services/SocialPublishingService.ts`) to finalize the pipeline's end-to-end mock architecture.

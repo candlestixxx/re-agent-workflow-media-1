@@ -24,11 +24,12 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented `MagnificAiService` to stub HTTP interactions for generating styled (day/night) marketing images.
 - Implemented `CanvaIntegrationService` to mock the payload assembly and final asset routing from Canva to the local file system.
 - Implemented `SocialPublishingService` to route approved social media post drafts to mocked endpoints mapped to live Facebook, LinkedIn, Instagram, and X (Twitter) structures.
+- Implemented `AutomationTriggerService` to parse external CRM webhooks, conditionally map listing status events to internal `ListingStage` logic, and scaffold `ListingMediaJob`s.
 
 ## Known Limitations / Gaps
 - The actual live API HTTP integrations with Magnific, Canva, Facebook, LinkedIn, and Lofty are pending. Service classes use mock logic and `.env` flags instead of real HTTP requests to avoid committing secrets or requiring real tokens in CI.
-- The system currently represents a fully tested orchestration skeleton (v1.0.0), but visual processing engines (FFmpeg, live SDKs) still need to be swapped in for the final production deployment.
+- The system currently represents a fully tested orchestration skeleton (v1.1.0), but visual processing engines (FFmpeg, live SDKs) still need to be swapped in for the final production deployment.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
 
 ## Next Steps
-- Implement Advanced Automation triggers (Phase 5 on ROADMAP), handling webhooks from CRMs to automatically kick off jobs when listing statuses update.
+- Implement automated Just Sold pipeline routing.
