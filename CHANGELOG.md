@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - Image Saving Logic
+### Added
+- Implemented `AssetStorageService` (`src/services/AssetStorageService.ts`) to enforce consistent file naming patterns (`{Address}_{Stage}_{Type}_{Variation}.jpg`).
+- Added utility to mock buffer saving of generated assets to existing property folders.
+- Included comprehensive test suite for testing file paths and `fs` integration.
+
 ## [0.3.0] - AI Copy Generation
 ### Added
 - Implemented `SocialCopyService` (`src/services/SocialCopyService.ts`) to build prompts and handle social media copy generation.

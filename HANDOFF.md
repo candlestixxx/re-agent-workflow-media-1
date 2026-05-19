@@ -17,10 +17,11 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented `FolderDetectionService` to locate property media folders based on configured fallback priority (Network share -> MLS -> Downloads -> Desktop).
 - Wrote and passed Jest tests mocking the `fs` module for folder detection logic.
 - Implemented `SocialCopyService` to handle prompt construction and generation of social media copy, using either fallback templates or simulated AI responses (based on `.env`).
+- Implemented `AssetStorageService` to handle sanitized file path construction (`{Address}_{Stage}_{Type}_{Variation}.jpg`) and local buffer saving into property folders.
 
 ## Known Limitations / Gaps
 - The actual integrations with Magnific, Canva, and Lofty are pending. AI copy generation uses mock logic instead of live HTTP calls to Gemini/OpenAI to avoid committing secrets or requiring real tokens in CI.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
 
 ## Next Steps
-- Implement Image Saving Module (logic to save generated outputs into specific folders with consistent naming conventions).
+- Implement Lofty Landing Page Skeleton (setup API call wrappers to inject tracking IDs to landing pages).
