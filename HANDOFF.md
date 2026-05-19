@@ -14,10 +14,12 @@ The requirements and project scope were derived from a provided conversation log
 - Initialized a Node.js and TypeScript environment.
 - Implemented core data models in `src/models/` for the real-estate marketing pipeline.
 - Set up unit testing with Jest and created basic data model tests.
+- Implemented `FolderDetectionService` to locate property media folders based on configured fallback priority (Network share -> MLS -> Downloads -> Desktop).
+- Wrote and passed Jest tests mocking the `fs` module for folder detection logic.
 
 ## Known Limitations / Gaps
-- Currently only the data models are implemented. The actual integrations with Magnific, Canva, Lofty, and Gemini are pending.
+- The actual integrations with Magnific, Canva, Lofty, and Gemini are pending.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
 
 ## Next Steps
-- Continue with the next highest-priority task from `TODO.md`, which is likely implementing the folder detection and photo selection logic (Stage A and Stage B).
+- Implement AI Copy Generation Integration (wrapper around Gemini/ChatGPT API).
