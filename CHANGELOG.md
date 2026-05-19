@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - Roadmap Documentation Sync
+### Fixed
+- Updated `ROADMAP.md` toggles to properly reflect the completed implementation of Phase 1 (Folder Detection) and Phase 3 (Lofty API, Gemini API/Social Copy) logic built in prior releases.
+
 ## [1.3.0] - Batch Processing Automation
 ### Added
 - Implemented `BatchProcessingService` (`src/services/BatchProcessingService.ts`) to initialize multiple `ListingMediaJob`s at once.
