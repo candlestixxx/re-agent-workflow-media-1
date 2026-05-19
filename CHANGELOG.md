@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - AI Copy Generation
+### Added
+- Implemented `SocialCopyService` (`src/services/SocialCopyService.ts`) to build prompts and handle social media copy generation.
+- Added graceful fallback to local template strings if Gemini or OpenAI API keys are not provided.
+- Added comprehensive unit tests for prompt construction and environment-based fallback logic.
+
 ## [0.2.0] - Folder Detection Update
 ### Added
 - Implemented `FolderDetectionService` (`src/services/FolderDetectionService.ts`) to handle fallback file path searching (Network share, MLS, Downloads, Desktop).
