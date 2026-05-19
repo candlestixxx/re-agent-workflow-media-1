@@ -18,4 +18,4 @@
 14. **Wire Live SDK: Canva**: Build template export API requests inside `CanvaIntegrationService`. (Completed)
 15. **Wire Live SDK: Gemini/OpenAI**: Build completion API requests inside `SocialCopyService` for dynamic captions. (Completed)
 16. **Wire Live SDK: Lofty**: Build POST payload dispatch logic inside `LoftyIntegrationService`. (Completed)
-17. **Wire Live SDK: Social Networks**: Build OAuth/Graph API routes inside `SocialPublishingService` to push payloads to live platform profiles.
+17. **Wire Live SDK: Social Networks**: Build OAuth/Graph API routes inside `SocialPublishingService` to push payloads to live platform profiles. (Completed)

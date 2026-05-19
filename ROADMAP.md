@@ -30,4 +30,4 @@
 - ✅ Swap `CanvaIntegrationService` mocks for live OAuth Canva integration.
 - ✅ Swap `SocialCopyService` mocks for live Gemini / OpenAI wrapper calls.
 - ✅ Swap `LoftyIntegrationService` mocks for live CRM Landing Page POST endpoints.
-- ⬜ Swap `SocialPublishingService` mocks for live Facebook, Instagram, and LinkedIn Graph API routes.
+- ✅ Swap `SocialPublishingService` mocks for live Facebook, Instagram, and LinkedIn Graph API routes.

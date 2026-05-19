@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - Social Publishing Live Graph API Adapters
+### Added
+- Upgraded `SocialPublishingService` (`src/services/SocialPublishingService.ts`) to intercept local draft mocks and replace them with live REST payloads targeting Facebook's Graph API and LinkedIn's UGC Posts API.
+- Added live API token fallback constraints (leveraging `FACEBOOK_GRAPH_TOKEN` and `LINKEDIN_API_TOKEN`).
+
 ## [1.8.0] - Lofty CRM API Live Adapter
 ### Added
 - Upgraded `LoftyIntegrationService` to execute active `axios` REST calls targeting Lofty's CRM `v1/landing-pages` API endpoint when `LOFTY_API_KEY` is present.
