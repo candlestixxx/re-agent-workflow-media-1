@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0] - Lofty CRM API Live Adapter
+### Added
+- Upgraded `LoftyIntegrationService` to execute active `axios` REST calls targeting Lofty's CRM `v1/landing-pages` API endpoint when `LOFTY_API_KEY` is present.
+- Updated tests to safely isolate HTTP boundaries while verifying valid CRM payload generation and configuration injection.
+
 ## [1.7.0] - Social Copy Live Adapter
 ### Added
 - Upgraded `SocialCopyService` to execute active `axios` REST calls targeting OpenAI's `v1/chat/completions` API endpoint when `OPENAI_API_KEY` is present.

@@ -1,9 +1,11 @@
 import { LandingPageJob } from '../models/LandingPageJob';
+import axios from 'axios';
 
 export class LoftyIntegrationService {
   /**
-   * Generates a skeleton for a Lofty CRM landing page payload.
+   * Generates a CRM landing page payload.
    * Injects environment-configured tracking IDs automatically.
+   * Executes a live HTTP POST if LOFTY_API_KEY is available in the environment.
    *
    * @param listingId The internal identifier for the listing job.
    * @param address The property address.
@@ -17,35 +19,65 @@ export class LoftyIntegrationService {
     imageUrl: string,
     highlights: string[]
   ): Promise<LandingPageJob> {
+    const apiKey = process.env.LOFTY_API_KEY;
 
-    // In a real implementation, this would construct an HTTP POST request
-    // to the Lofty CRM API using process.env.LOFTY_API_KEY.
-
-    // Validate we have a key (for logging/mocking purposes)
-    const hasApiKey = !!process.env.LOFTY_API_KEY;
-
-    // Retrieve default tracking from env or use fallbacks if env is empty
     const analyticsId = process.env.DEFAULT_GOOGLE_ANALYTICS_ID || 'G-DEFAULT';
     const pixelId = process.env.DEFAULT_FACEBOOK_PIXEL_ID || 'FB-DEFAULT';
-    const popupDelay = 7; // Specified in original requirements
+    const popupDelay = 7;
 
-    // Generate a mock URL based on address
     const cleanAddress = address.replace(/[^a-z0-9]/gi, '-').toLowerCase();
-    const mockPageUrl = `https://crm.lofty.com/landing/${cleanAddress}`;
+    let publishedUrl: string | undefined = undefined;
+    let finalStatus: LandingPageJob['publishStatus'] = 'Pending';
 
-    const job: LandingPageJob = {
+    if (apiKey) {
+      try {
+        // Execute live CRM payload
+        const response = await axios.post(
+          'https://api.lofty.com/v1/landing-pages',
+          {
+            title: address,
+            hero_image: imageUrl,
+            property_features: highlights,
+            tracking: {
+              google_analytics_id: analyticsId,
+              facebook_pixel_id: pixelId,
+              popup_delay: popupDelay
+            }
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${apiKey}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (response.data && response.data.url) {
+          publishedUrl = response.data.url;
+          finalStatus = 'Published';
+        } else {
+          finalStatus = 'Failed';
+        }
+      } catch (error) {
+        finalStatus = 'Failed';
+      }
+    } else {
+      // Fallback local mock behavior
+      publishedUrl = `https://crm.lofty.com/landing/${cleanAddress}`;
+      finalStatus = 'Pending'; // Mock implies we are waiting for real tokens
+    }
+
+    return {
       id: `lofty-job-${Date.now()}`,
       listingId,
       platform: 'Lofty',
-      ...(hasApiKey && { pageUrl: mockPageUrl }), // Only provide a URL if API exists
+      ...(publishedUrl && finalStatus === 'Published' && { pageUrl: publishedUrl }),
       analyticsId,
       pixelId,
       popupDelaySeconds: popupDelay,
-      publishStatus: hasApiKey ? 'Published' : 'Pending',
+      publishStatus: finalStatus,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-
-    return job;
   }
 }
