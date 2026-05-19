@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - Lofty CRM Landing Page Integration
+### Added
+- Implemented `LoftyIntegrationService` (`src/services/LoftyIntegrationService.ts`) to generate LandingPageJobs.
+- Added automated tracking ID injection (Google Analytics, Facebook Pixel) based on environment configurations.
+- Included unit tests to verify payload creation and conditional publish states based on API key presence.
+
 ## [0.4.0] - Image Saving Logic
 ### Added
 - Implemented `AssetStorageService` (`src/services/AssetStorageService.ts`) to enforce consistent file naming patterns (`{Address}_{Stage}_{Type}_{Variation}.jpg`).
