@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - Approval Workflow Logic
+### Added
+- Implemented `ApprovalWorkflowService` to handle pipeline state transitions.
+- Added strict validations to ensure Jobs cannot be published without passing an explicitly audited `Approved` status containing a `reviewerId`.
+- Added unit tests for valid and invalid job state transition sequences.
+
 ## [0.5.0] - Lofty CRM Landing Page Integration
 ### Added
 - Implemented `LoftyIntegrationService` (`src/services/LoftyIntegrationService.ts`) to generate LandingPageJobs.
