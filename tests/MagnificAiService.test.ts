@@ -1,3 +1,5 @@
+import axios from 'axios';
+jest.mock('axios');
 import { MagnificAiService } from '../src/services/MagnificAiService';
 
 describe('MagnificAiService', () => {
@@ -71,5 +73,3 @@ describe('MagnificAiService', () => {
 });
 
 // Define the axios mock at the file scope
-import axios from 'axios';
-jest.mock('axios');

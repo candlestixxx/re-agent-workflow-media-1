@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - Canva API Live Adapter
+### Added
+- Upgraded `CanvaIntegrationService` to execute active `axios` REST calls mapping to Canva's `api.canva.com/rest/v1/autocreates` design generation endpoints.
+- Expanded testing suite to isolate and mock active Axios post routines simulating Canva HTTP returns.
+
 ## [1.5.0] - Magnific AI Live Adapter
 ### Added
 - Integrated `axios` dependency for making live network calls.
