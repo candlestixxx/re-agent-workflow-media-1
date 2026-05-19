@@ -34,4 +34,4 @@ The requirements and project scope were derived from a provided conversation log
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
 
 ## Next Steps
-- Wire the mock framework up to live REST APIs using live tokens (Phase 6+).
+- Phase 6 (Live API Integration): Swap out `MagnificAiService`, `CanvaIntegrationService`, `SocialCopyService`, `LoftyIntegrationService`, and `SocialPublishingService` mocks for live HTTP request logic using valid API tokens.

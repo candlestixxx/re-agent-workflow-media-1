@@ -24,3 +24,10 @@
 - ✅ Full CRM trigger integration (e.g., auto-start pipeline on new listing).
 - ✅ Automated "Just Sold" pipeline.
 - ✅ Batch generation across multiple listings.
+
+## Phase 6: Live API Integration
+- ⬜ Swap `MagnificAiService` mocks for live HTTP SDK endpoints.
+- ⬜ Swap `CanvaIntegrationService` mocks for live OAuth Canva integration.
+- ⬜ Swap `SocialCopyService` mocks for live Gemini / OpenAI wrapper calls.
+- ⬜ Swap `LoftyIntegrationService` mocks for live CRM Landing Page POST endpoints.
+- ⬜ Swap `SocialPublishingService` mocks for live Facebook, Instagram, and LinkedIn Graph API routes.
