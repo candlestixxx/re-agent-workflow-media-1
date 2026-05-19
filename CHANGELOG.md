@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - Orchestrator Entry Point Initialization
+### Added
+- Created `src/index.ts` to act as the primary executable entry point for the backend logic.
+- Implemented terminal-based mock webhook simulations linking together folder detection, AI copies, CRM payload generations, and Social Draft approvals.
+
 ## [1.9.0] - Social Publishing Live Graph API Adapters
 ### Added
 - Upgraded `SocialPublishingService` (`src/services/SocialPublishingService.ts`) to intercept local draft mocks and replace them with live REST payloads targeting Facebook's Graph API and LinkedIn's UGC Posts API.

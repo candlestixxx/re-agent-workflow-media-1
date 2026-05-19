@@ -25,6 +25,9 @@
 - ✅ Automated "Just Sold" pipeline.
 - ✅ Batch generation across multiple listings.
 
+## Phase 7: Live App Orchestration
+- ✅ Build main application execution boundary (`src/index.ts`).
+
 ## Phase 6: Live API Integration
 - ✅ Swap `MagnificAiService` mocks for live HTTP SDK endpoints.
 - ✅ Swap `CanvaIntegrationService` mocks for live OAuth Canva integration.

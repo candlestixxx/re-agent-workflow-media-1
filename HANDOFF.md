@@ -34,4 +34,4 @@ The requirements and project scope were derived from a provided conversation log
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps
-- System mapping is essentially complete. Begin operational testing in the staging environment.
+- Implement Express.js server bindings replacing the terminal CLI test bounds inside `src/index.ts`.
