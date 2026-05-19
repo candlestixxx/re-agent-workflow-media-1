@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - Video Pipeline Expansion
+### Added
+- Created `VideoProcessingJob` model to track video specific metadata (source types, aspect ratios, editing states).
+- Implemented `VideoProcessingService` to initialize video jobs and manage state transitions from `Queued` through `Completed`.
+
 ## [0.6.0] - Approval Workflow Logic
 ### Added
 - Implemented `ApprovalWorkflowService` to handle pipeline state transitions.
