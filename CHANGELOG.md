@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - Magnific AI Stub Adapter
+### Added
+- Implemented `MagnificAiService` to simulate fetching day and night image generation buffers.
+- Configured `.env` fallback toggles (`MAGNIFIC_API_KEY`, `MAGNIFIC_MODEL`) to allow CI systems to generate mock visual assets without tokens.
+- Updated `ROADMAP.md` to note the completion of Phase 2 logic (Magnific generation and local asset saving).
+
 ## [0.7.0] - Video Pipeline Expansion
 ### Added
 - Created `VideoProcessingJob` model to track video specific metadata (source types, aspect ratios, editing states).

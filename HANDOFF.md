@@ -21,11 +21,12 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented `LoftyIntegrationService` to build CRM landing page job structures with automatic default injection for Google Analytics and Facebook Pixels.
 - Implemented `ApprovalWorkflowService` to enforce state transition validation (`Pending_Approval` -> `Approved` -> `Published`) and ensure all publishing actions possess a valid reviewer audit trail.
 - Implemented `VideoProcessingJob` and `VideoProcessingService` to expand the pipeline footprint to handle video editing states (Queued, Editing, Rendering, Completed).
+- Implemented `MagnificAiService` to stub HTTP interactions for generating styled (day/night) marketing images.
 
 ## Known Limitations / Gaps
 - The actual live API HTTP integrations with Magnific, Canva, and Lofty are pending. Service classes use mock logic and `.env` flags instead of real HTTP requests to avoid committing secrets or requiring real tokens in CI.
-- The system currently represents a fully tested orchestration skeleton, but visual processing engines (FFmpeg, Maginific SDKs) still need to be swapped in for the final production deployment.
+- The system currently represents a fully tested orchestration skeleton, but visual processing engines (FFmpeg, live Maginific SDKs) still need to be swapped in for the final production deployment.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest).
 
 ## Next Steps
-- Implement specific API wrapper adapters for Magnific and Lofty (Phase 2 & 3 on ROADMAP).
+- Implement specific API wrapper adapters for Canva integration (Phase 2 on ROADMAP).
