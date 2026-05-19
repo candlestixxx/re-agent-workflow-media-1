@@ -13,3 +13,4 @@
 9. **Implement Social Publishing Queue**: Build adapters to simulate pushing completed SocialPostDrafts to target external networks. (Completed)
 10. **Implement Automation Triggers**: Add support for parsing CRM webhooks and scaffolding pipeline jobs based on listing status events. (Completed)
 11. **Implement Automated Just Sold Pipeline**: Add transition logic mapping 'Just Sold' statuses to newly spawned specialized marketing assets. (Completed)
+12. **Implement Batch Processing**: Allow iterating array queues of addresses to concurrently spawn tracking Jobs. (Completed)

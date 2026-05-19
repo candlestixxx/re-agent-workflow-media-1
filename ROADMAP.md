@@ -23,4 +23,4 @@
 ## Phase 5: Advanced Automation
 - ✅ Full CRM trigger integration (e.g., auto-start pipeline on new listing).
 - ✅ Automated "Just Sold" pipeline.
-- ⬜ Batch generation across multiple listings.
+- ✅ Batch generation across multiple listings.

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - Batch Processing Automation
+### Added
+- Implemented `BatchProcessingService` (`src/services/BatchProcessingService.ts`) to initialize multiple `ListingMediaJob`s at once.
+- Hardened batch queue loops to log and ignore individual property folder detection failures without crashing the parent process.
+
 ## [1.2.0] - Automated Just Sold Pipeline
 ### Added
 - Implemented `JustSoldPipelineService` to automatically spin up customized social media drafts for the Facebook, LinkedIn, and Instagram platforms when a property enters the "Just Sold" stage.
