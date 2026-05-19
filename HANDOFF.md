@@ -34,4 +34,4 @@ The requirements and project scope were derived from a provided conversation log
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps
-- Implement Database persistence (e.g. PostgreSQL or MongoDB) to track active `ListingMediaJob` states across server reboots.
+- Initialize CI pipelines mapping the Jest test boundaries out to GitHub Actions to enforce safe build triggers continuously.

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0] - Postgres Database Layer
+### Added
+- Integrated `pg` connection pool into a new `DatabaseService` (`src/services/DatabaseService.ts`).
+- Modified `AutomationTriggerService` to directly persist active jobs into the database upon initial webhook evaluation, maintaining local mock fallbacks natively in the Catch block for test-suite integrity.
+- Setup specific Postgres mocking inside `tests/DatabaseService.test.ts`.
+
 ## [2.1.0] - Express API Webhook Server
 ### Added
 - Upgraded the `src/index.ts` CLI runner into an active Express.js server listening on `process.env.PORT`.

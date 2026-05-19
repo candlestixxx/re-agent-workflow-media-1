@@ -25,6 +25,9 @@
 - ✅ Automated "Just Sold" pipeline.
 - ✅ Batch generation across multiple listings.
 
+## Phase 8: Persistence
+- ✅ Implement database layer integration to track jobs reliably via PostgreSQL.
+
 ## Phase 7: Live App Orchestration
 - ✅ Build main application execution boundary (`src/index.ts`).
 - ✅ Wrap execution boundaries within an active Express.js webhook listening server.

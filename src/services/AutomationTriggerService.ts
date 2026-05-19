@@ -1,5 +1,6 @@
 import { ListingMediaJob, ListingStage } from '../models/ListingMediaJob';
 import { FolderDetectionService } from './FolderDetectionService';
+import { DatabaseService } from './DatabaseService';
 
 export interface WebhookPayload {
   event: string;
@@ -54,6 +55,13 @@ export class AutomationTriggerService {
       updatedAt: new Date()
     };
 
-    return job;
+    try {
+      // Persist to database state instead of just retaining in memory
+      const persistedJob = await DatabaseService.insertListingMediaJob(job);
+      return persistedJob;
+    } catch (dbError) {
+      console.warn('PostgreSQL persistence skipped. Returning in-memory job.');
+      return job;
+    }
   }
 }

@@ -1,8 +1,10 @@
 import { AutomationTriggerService, WebhookPayload } from '../src/services/AutomationTriggerService';
 import { FolderDetectionService } from '../src/services/FolderDetectionService';
+import { DatabaseService } from '../src/services/DatabaseService';
 
-// Mock the FolderDetectionService
+// Mock internal dependencies
 jest.mock('../src/services/FolderDetectionService');
+jest.mock('../src/services/DatabaseService');
 
 describe('AutomationTriggerService', () => {
   beforeEach(() => {
@@ -48,7 +50,7 @@ describe('AutomationTriggerService', () => {
     );
   });
 
-  it('should successfully initialize a job for a new listing', async () => {
+  it('should successfully initialize a job for a new listing and persist to DB', async () => {
     const payload: WebhookPayload = {
       event: 'listing.created',
       listingId: 'mls-456',
@@ -57,6 +59,7 @@ describe('AutomationTriggerService', () => {
     };
 
     (FolderDetectionService.findPropertyFolder as jest.Mock).mockReturnValue('/mock/path/123 Main St');
+    (DatabaseService.insertListingMediaJob as jest.Mock).mockImplementation(async (j) => j);
 
     const job = await AutomationTriggerService.handleWebhook(payload);
 
@@ -65,6 +68,28 @@ describe('AutomationTriggerService', () => {
     expect(job?.stage).toBe('Just Listed');
     expect(job?.status).toBe('Pending_Generation');
     expect(job?.sourceFolderPath).toBe('/mock/path/123 Main St');
+
+    expect(DatabaseService.insertListingMediaJob).toHaveBeenCalledTimes(1);
+    expect(DatabaseService.insertListingMediaJob).toHaveBeenCalledWith(
+      expect.objectContaining({ propertyAddress: '123 Main St' })
+    );
+  });
+
+  it('should fallback to returning an in-memory job if DB throws an error', async () => {
+    const payload: WebhookPayload = {
+      event: 'listing.created',
+      listingId: 'mls-456',
+      address: 'DB Fail St',
+      agentId: 'agent-1'
+    };
+
+    (FolderDetectionService.findPropertyFolder as jest.Mock).mockReturnValue('/mock/path');
+    (DatabaseService.insertListingMediaJob as jest.Mock).mockRejectedValueOnce(new Error('PG Connection Failed'));
+
+    const job = await AutomationTriggerService.handleWebhook(payload);
+
+    expect(job).not.toBeNull();
+    expect(job?.propertyAddress).toBe('DB Fail St');
   });
 
   it('should assign a specific target stage when status_updated event fires', async () => {
@@ -77,6 +102,7 @@ describe('AutomationTriggerService', () => {
     };
 
     (FolderDetectionService.findPropertyFolder as jest.Mock).mockReturnValue('/mock/path/456 Oak Dr');
+    (DatabaseService.insertListingMediaJob as jest.Mock).mockImplementation(async (j) => j);
 
     const job = await AutomationTriggerService.handleWebhook(payload);
 

@@ -21,3 +21,4 @@
 17. **Wire Live SDK: Social Networks**: Build OAuth/Graph API routes inside `SocialPublishingService` to push payloads to live platform profiles. (Completed)
 18. **Implement Application Orchestrator**: Create main `index.ts` entry point tying services together for executable flow. (Completed)
 19. **Express API Bindings**: Spin up persistent REST endpoints listening for CRM webhooks, responding with 202 async statuses. (Completed)
+20. **Database Initialization**: Implement PostgreSQL persistence layer mapping `ListingMediaJob` records. (Completed)
