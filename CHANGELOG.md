@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - Automated Just Sold Pipeline
+### Added
+- Implemented `JustSoldPipelineService` to automatically spin up customized social media drafts for the Facebook, LinkedIn, and Instagram platforms when a property enters the "Just Sold" stage.
+- Added tests verifying platform multi-draft generation logic and specific status checks.
+
 ## [1.1.0] - Advanced Automation Triggers
 ### Added
 - Implemented `AutomationTriggerService` (`src/services/AutomationTriggerService.ts`) to intercept CRM webhooks and construct workflow jobs.

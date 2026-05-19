@@ -12,3 +12,4 @@
 8. **Implement Magnific AI Integration**: Build the API wrapper stub for generating day/night variations of listing source images. (Completed)
 9. **Implement Social Publishing Queue**: Build adapters to simulate pushing completed SocialPostDrafts to target external networks. (Completed)
 10. **Implement Automation Triggers**: Add support for parsing CRM webhooks and scaffolding pipeline jobs based on listing status events. (Completed)
+11. **Implement Automated Just Sold Pipeline**: Add transition logic mapping 'Just Sold' statuses to newly spawned specialized marketing assets. (Completed)
