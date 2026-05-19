@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - Express API Webhook Server
+### Added
+- Upgraded the `src/index.ts` CLI runner into an active Express.js server listening on `process.env.PORT`.
+- Deployed `/webhook/crm` POST endpoint to ingest automated triggers from Lofty/HubSpot systems asynchronously.
+
 ## [2.0.0] - Orchestrator Entry Point Initialization
 ### Added
 - Created `src/index.ts` to act as the primary executable entry point for the backend logic.

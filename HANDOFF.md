@@ -34,4 +34,4 @@ The requirements and project scope were derived from a provided conversation log
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps
-- Implement Express.js server bindings replacing the terminal CLI test bounds inside `src/index.ts`.
+- Implement Database persistence (e.g. PostgreSQL or MongoDB) to track active `ListingMediaJob` states across server reboots.

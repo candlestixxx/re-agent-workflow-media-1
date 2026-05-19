@@ -27,6 +27,7 @@
 
 ## Phase 7: Live App Orchestration
 - ✅ Build main application execution boundary (`src/index.ts`).
+- ✅ Wrap execution boundaries within an active Express.js webhook listening server.
 
 ## Phase 6: Live API Integration
 - ✅ Swap `MagnificAiService` mocks for live HTTP SDK endpoints.

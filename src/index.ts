@@ -1,52 +1,54 @@
+import express, { Request, Response } from 'express';
 import { AutomationTriggerService } from './services/AutomationTriggerService';
 import { SocialCopyService } from './services/SocialCopyService';
 import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
 /**
- * Main entry point for the Real Estate Marketing Media Pipeline.
- *
- * In a production environment, this file might wrap an Express.js server
- * listening for incoming webhooks. For this MVP skeleton, we simulate
- * the orchestration pipeline triggered by a mock webhook.
+ * Health check endpoint.
  */
-async function run() {
-  console.log('--- 🚀 Starting Real Estate Marketing Media Pipeline ---');
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok', message: 'Real Estate Marketing Media Pipeline is running.' });
+});
 
-  // 1. Simulate an incoming webhook from the CRM when a new listing is created
-  console.log('\n[1] Intercepting CRM Webhook (listing.created)...');
-
-  const mockWebhookPayload = {
-    event: 'listing.created',
-    listingId: 'MLS-999999',
-    address: '888 Test Runner Lane',
-    agentId: 'lum-1'
-  };
+/**
+ * Webhook interceptor for CRM events.
+ */
+app.post('/webhook/crm', async (req: Request, res: Response) => {
+  const payload = req.body;
+  console.log(`\n[Webhook Received] Event: ${payload.event || 'Unknown'}`);
 
   try {
-    // The trigger service safely verifies the folder structures and spins up a job
-    const job = await AutomationTriggerService.handleWebhook(mockWebhookPayload);
+    // 1. Trigger service safely verifies the folder structures and spins up a job
+    const job = await AutomationTriggerService.handleWebhook(payload);
 
     if (!job) {
-      console.log('No job created for payload.');
+      res.status(200).json({ message: 'Payload ignored. Event type not actionable.' });
       return;
     }
 
     console.log(`✅ Pipeline Job Initialized: ${job.id}`);
     console.log(`   Property: ${job.propertyAddress}`);
     console.log(`   Stage: ${job.stage}`);
-    console.log(`   Source Path: ${job.sourceFolderPath}`);
 
-    // 2. Generate Social Copy
+    // Respond to the webhook early to prevent timeouts; process the rest asynchronously.
+    res.status(202).json({ message: 'Job initialized', jobId: job.id });
+
+    // 2. Asynchronously Generate Social Copy
     console.log('\n[2] Generating Social Copy via AI Wrapper...');
     const copy = await SocialCopyService.generateSocialCopy(
       job.propertyAddress,
       job.stage,
-      ['Beautiful landscaping', 'Modern kitchen']
+      ['Beautiful landscaping', 'Modern kitchen'] // Example highlights
     );
     console.log(`✅ Copy Generated: "${copy.substring(0, 50)}..."`);
 
-    // 3. Generate Landing Page
+    // 3. Asynchronously Generate Landing Page
     console.log('\n[3] Building Lofty Landing Page Skeleton...');
     const landingPage = await LoftyIntegrationService.createOrUpdateLandingPage(
       job.id,
@@ -55,9 +57,6 @@ async function run() {
       ['Beautiful landscaping', 'Modern kitchen']
     );
     console.log(`✅ Landing Page Job Status: ${landingPage.publishStatus}`);
-    if (landingPage.pageUrl) {
-      console.log(`   URL: ${landingPage.pageUrl}`);
-    }
 
     // 4. Draft the final Social Post artifact
     console.log('\n[4] Drafting Social Post for Approval...');
@@ -73,15 +72,20 @@ async function run() {
       updatedAt: new Date()
     };
 
-    console.log(`✅ Draft Created (${draft.platform})`);
-    console.log(`   Approval Status: ${draft.approvalStatus}`);
-
-    console.log('\n--- 🎉 Pipeline Execution Complete ---');
+    console.log(`✅ Draft Created (${draft.platform}). Pending Approval.`);
+    console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
 
   } catch (error) {
     console.error('❌ Pipeline Error:', error instanceof Error ? error.message : error);
-  }
-}
 
-// Execute the mock pipeline run
-run();
+    // If headers haven't been sent yet, return the error to the caller
+    if (!res.headersSent) {
+      res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
+    }
+  }
+});
+
+// Start the Express server
+app.listen(PORT, () => {
+  console.log(`--- 🚀 Real Estate Marketing Media Pipeline Server listening on port ${PORT} ---`);
+});
