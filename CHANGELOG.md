@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.8.0] - Slack/Discord Alerting Integration
+### Added
+- Created `AlertingService.ts` providing programmatic HTTP POST calls to send text/content payloads directly to mapped Slack or Discord webhooks.
+- Integrated `AlertingService` directly into the `BatchProcessingService` to report final completion ratios or warning states when large listing ingestion runs conclude.
+- Implemented comprehensive Jest testing suites protecting graceful offline mocking logic if `ALERT_WEBHOOK_URL` is missing.
+
 ## [2.7.0] - Sandbox Integration Testing Capabilities
 ### Added
 - Created `tests/integration/` directory and `sandbox.test.ts` boilerplate to demonstrate how to execute live integration tests against Sandbox endpoints using valid .env keys, while cleanly bypassing execution in offline environments like CI.

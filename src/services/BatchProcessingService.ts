@@ -1,5 +1,6 @@
 import { ListingMediaJob, ListingStage } from '../models/ListingMediaJob';
 import { FolderDetectionService } from './FolderDetectionService';
+import { AlertingService } from './AlertingService';
 
 export class BatchProcessingService {
   /**
@@ -42,8 +43,19 @@ export class BatchProcessingService {
       }
     }
 
-    // In a real application, you might want to return the failed array as well for the UI to report on,
-    // but for this implementation we simply return the successful jobs.
+    // Fire an alert via the AlertingService if there are failures, or just a success summary.
+    if (failedAddresses.length > 0) {
+      await AlertingService.sendAlert(
+        `Batch processing completed with errors. ${jobs.length} successful, ${failedAddresses.length} failed.`,
+        'warning'
+      );
+    } else {
+      await AlertingService.sendAlert(
+        `Batch processing completed perfectly. ${jobs.length} properties initialized.`,
+        'info'
+      );
+    }
+
     return jobs;
   }
 }
