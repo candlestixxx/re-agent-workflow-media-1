@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.7.0] - Sandbox Integration Testing Capabilities
+### Added
+- Created `tests/integration/` directory and `sandbox.test.ts` boilerplate to demonstrate how to execute live integration tests against Sandbox endpoints using valid .env keys, while cleanly bypassing execution in offline environments like CI.
+
 ## [2.6.0] - Docker Containerization
 ### Added
 - Added `Dockerfile` defining a multi-stage Alpine build for the backend service.
