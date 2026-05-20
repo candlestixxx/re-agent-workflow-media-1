@@ -5,12 +5,14 @@ export class DatabaseService {
   private static pool: Pool;
 
   /**
-   * Returns a singleton connection pool using standard PG environment variables.
-   * (e.g. PGUSER, PGHOST, PGPASSWORD, PGDATABASE, PGPORT)
+   * Returns a singleton connection pool.
+   * Parses the DATABASE_URL connection string if provided, otherwise falls back to standard PG env vars.
    */
   public static getPool(): Pool {
     if (!this.pool) {
-      this.pool = new Pool();
+      this.pool = new Pool({
+        connectionString: process.env.DATABASE_URL
+      });
     }
     return this.pool;
   }

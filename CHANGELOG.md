@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0] - Docker Containerization
+### Added
+- Added `Dockerfile` defining a multi-stage Alpine build for the backend service.
+- Added `docker-compose.yml` orchestrating the backend alongside a PostgreSQL 15 container mapped to automatically run initial migrations.
+- Updated `package.json` with a standard `npm start` script bridging the container execution.
+- Extensively updated `DEPLOY.md` establishing Docker Compose as the recommended startup path.
+
 ## [2.5.0] - PostgreSQL Schema Migrations
 ### Added
 - Added `migrations/001_initial_schema.sql` to construct necessary database tables (`listing_media_jobs`, `generated_assets`, etc.) for live deployments.
