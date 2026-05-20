@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0] - Refined Sandbox Architecture and Video Specs
+### Added
+- Added an `executeLocalRendering` FFmpeg stub to `VideoProcessingService` for local file manipulation mapping.
+- Updated `DEPLOY.md` to explicitly map Sandbox API keys (`CANVA_API_KEY`, `MAGNIFIC_API_KEY`, etc) for developers transitioning out of mock-environments.
+
 ## [2.3.0] - GitHub Actions CI Pipeline
 ### Added
 - Created `.github/workflows/ci.yml` to automate build and test pipelines on PRs and pushes to the main branch.

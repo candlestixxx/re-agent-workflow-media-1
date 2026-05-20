@@ -23,6 +23,13 @@
    ```
    *Note: Do not commit `.env` or hard-code any API keys in the source code.*
 
+   **Transitioning from Mock to Live (Sandbox Testing):**
+   The application degrades gracefully to mock responses if API keys are absent. To enable live integration testing, retrieve sandbox or test API keys from the respective providers and add them to your `.env` file:
+   - **Magnific AI:** `MAGNIFIC_API_KEY`
+   - **Canva:** `CANVA_API_KEY`
+   - **Lofty CRM:** `LOFTY_API_KEY`
+   - **OpenAI/Gemini:** `OPENAI_API_KEY`
+
 4. **Build the project:**
    ```bash
    npm run build
