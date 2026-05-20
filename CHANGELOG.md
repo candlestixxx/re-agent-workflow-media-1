@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - GitHub Actions CI Pipeline
+### Added
+- Created `.github/workflows/ci.yml` to automate build and test pipelines on PRs and pushes to the main branch.
+
 ## [2.2.0] - Postgres Database Layer
 ### Added
 - Integrated `pg` connection pool into a new `DatabaseService` (`src/services/DatabaseService.ts`).
