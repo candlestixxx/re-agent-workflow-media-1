@@ -30,19 +30,28 @@
    - **Lofty CRM:** `LOFTY_API_KEY`
    - **OpenAI/Gemini:** `OPENAI_API_KEY`
 
-4. **Build the project:**
+4. **Database Provisioning (PostgreSQL):**
+   The application requires a PostgreSQL database to persist jobs when running in production.
+   - Install PostgreSQL and create a new database.
+   - Update `DATABASE_URL` in your `.env` file.
+   - Run the initial migration script to build the schema:
+     ```bash
+     psql -d <your-database-name> -f migrations/001_initial_schema.sql
+     ```
+
+5. **Build the project:**
    ```bash
    npm run build
    ```
    This will compile the TypeScript code into the `dist/` directory.
 
-5. **Run the application (Development):**
+6. **Run the application (Development):**
    *(Note: Entry points to be defined in subsequent tasks. Use standard npm scripts.)*
    ```bash
    npm run dev
    ```
 
-6. **Run tests:**
+7. **Run tests:**
    ```bash
    npm test
    ```

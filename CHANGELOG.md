@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.0] - PostgreSQL Schema Migrations
+### Added
+- Added `migrations/001_initial_schema.sql` to construct necessary database tables (`listing_media_jobs`, `generated_assets`, etc.) for live deployments.
+- Updated `DEPLOY.md` with explicit PostgreSQL database provisioning commands mapping directly to the new SQL schema.
+
 ## [2.4.0] - Refined Sandbox Architecture and Video Specs
 ### Added
 - Added an `executeLocalRendering` FFmpeg stub to `VideoProcessingService` for local file manipulation mapping.
