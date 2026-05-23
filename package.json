@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc",
-    "start": "node dist/src/index.js"
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
