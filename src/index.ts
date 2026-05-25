@@ -37,6 +37,45 @@ app.get('/api/jobs', async (req: Request, res: Response) => {
 });
 
 /**
+ * Seed mock data for the dashboard UI.
+ */
+app.post('/api/mock/seed', async (req: Request, res: Response) => {
+  const mockJobs = [
+    {
+      id: `mock-job-1`,
+      mlsId: '123456',
+      propertyAddress: '123 Ocean Drive, Miami, FL',
+      stage: 'Just Listed' as any,
+      sourceFolderPath: '/listings/123-ocean-drive',
+      status: 'Completed',
+      createdBy: 'Agent Smith',
+      createdAt: new Date(Date.now() - 86400000),
+      updatedAt: new Date()
+    },
+    {
+      id: `mock-job-2`,
+      mlsId: '789012',
+      propertyAddress: '456 Mountain View, Aspen, CO',
+      stage: 'Coming Soon' as any,
+      sourceFolderPath: '/listings/456-mountain-view',
+      status: 'Pending_Generation',
+      createdBy: 'Agent Doe',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ];
+
+  try {
+    for (const job of mockJobs) {
+      await DatabaseService.insertListingMediaJob(job);
+    }
+    res.json({ message: 'Mock data seeded successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to seed mock data' });
+  }
+});
+
+/**
  * Webhook interceptor for CRM events.
  */
 app.post('/webhook/crm', async (req: Request, res: Response) => {

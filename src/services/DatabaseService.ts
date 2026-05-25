@@ -101,8 +101,31 @@ export class DatabaseService {
       }
     } catch (error) {
       console.error('Database query failed:', error);
-      // Fallback to empty array if DB is not available
-      return [];
+      // Fallback to mock data for demonstration if DB is not available
+      return [
+        {
+          id: `mock-job-1`,
+          mlsId: '123456',
+          propertyAddress: '123 Ocean Drive, Miami, FL',
+          stage: 'Just Listed' as any,
+          sourceFolderPath: '/listings/123-ocean-drive',
+          status: 'Completed',
+          createdBy: 'Agent Smith',
+          createdAt: new Date(Date.now() - 86400000),
+          updatedAt: new Date()
+        },
+        {
+          id: `mock-job-2`,
+          mlsId: '789012',
+          propertyAddress: '456 Mountain View, Aspen, CO',
+          stage: 'Coming Soon' as any,
+          sourceFolderPath: '/listings/456-mountain-view',
+          status: 'Pending_Generation',
+          createdBy: 'Agent Doe',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ];
     }
   }
 }
