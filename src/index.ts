@@ -3,11 +3,13 @@ import { AutomationTriggerService } from './services/AutomationTriggerService';
 import { SocialCopyService } from './services/SocialCopyService';
 import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
+import { DatabaseService } from './services/DatabaseService';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -20,6 +22,18 @@ app.use((req, res, next) => {
  */
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'Real Estate Marketing Media Pipeline is running.' });
+});
+
+/**
+ * Get all pipeline jobs for the dashboard.
+ */
+app.get('/api/jobs', async (req: Request, res: Response) => {
+  try {
+    const jobs = await DatabaseService.getAllListingMediaJobs();
+    res.json(jobs);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch jobs' });
+  }
 });
 
 /**

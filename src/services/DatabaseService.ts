@@ -71,4 +71,38 @@ export class DatabaseService {
       throw new Error(`Failed to persist ListingMediaJob: ${job.id}`);
     }
   }
+
+  /**
+   * Retrieves all ListingMediaJobs from the database, sorted by creation date descending.
+   *
+   * @returns A promise resolving to an array of ListingMediaJob objects.
+   */
+  public static async getAllListingMediaJobs(): Promise<ListingMediaJob[]> {
+    const query = 'SELECT * FROM listing_media_jobs ORDER BY created_at DESC;';
+
+    try {
+      const client = await this.getPool().connect();
+      try {
+        const res = await client.query(query);
+        return res.rows.map(row => ({
+          id: row.id,
+          mlsId: row.mls_id,
+          propertyAddress: row.property_address,
+          stage: row.stage,
+          sourceFolderPath: row.source_folder_path,
+          status: row.status,
+          createdBy: row.created_by,
+          approvedBy: row.approved_by,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at
+        }));
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      console.error('Database query failed:', error);
+      // Fallback to empty array if DB is not available
+      return [];
+    }
+  }
 }
