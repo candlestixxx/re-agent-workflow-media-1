@@ -91,6 +91,15 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
   }
 });
 
+// Global error handler
+app.use((err: any, req: Request, res: Response, next: any) => {
+  console.error(`[${new Date().toISOString()}] 🛑 UNHANDLED ERROR:`, err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err instanceof Error ? err.message : 'An unexpected error occurred'
+  });
+});
+
 // Start the Express server
 app.listen(PORT, () => {
   console.log(`--- 🚀 Real Estate Marketing Media Pipeline Server listening on port ${PORT} ---`);
