@@ -80,6 +80,12 @@ export class DatabaseService {
   public static async getAllListingMediaJobs(): Promise<ListingMediaJob[]> {
     const query = 'SELECT * FROM listing_media_jobs ORDER BY created_at DESC;';
 
+    // If no DATABASE_URL is provided, skip the connection attempt and return mock data directly
+    if (!process.env.DATABASE_URL) {
+      console.log('[Database] No DATABASE_URL found. Operating in mock mode.');
+      return this.getMockJobs();
+    }
+
     try {
       const client = await this.getPool().connect();
       try {
@@ -100,32 +106,38 @@ export class DatabaseService {
         client.release();
       }
     } catch (error) {
-      console.error('Database query failed:', error);
-      // Fallback to mock data for demonstration if DB is not available
-      return [
-        {
-          id: `mock-job-1`,
-          mlsId: '123456',
-          propertyAddress: '123 Ocean Drive, Miami, FL',
-          stage: 'Just Listed' as any,
-          sourceFolderPath: '/listings/123-ocean-drive',
-          status: 'Completed',
-          createdBy: 'Agent Smith',
-          createdAt: new Date(Date.now() - 86400000),
-          updatedAt: new Date()
-        },
-        {
-          id: `mock-job-2`,
-          mlsId: '789012',
-          propertyAddress: '456 Mountain View, Aspen, CO',
-          stage: 'Coming Soon' as any,
-          sourceFolderPath: '/listings/456-mountain-view',
-          status: 'Pending_Generation',
-          createdBy: 'Agent Doe',
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ];
+      console.error('[Database] Connection failed. Falling back to mock data.', error instanceof Error ? error.message : error);
+      return this.getMockJobs();
     }
+  }
+
+  /**
+   * Helper to provide consistent mock data for demonstration.
+   */
+  private static getMockJobs(): ListingMediaJob[] {
+    return [
+      {
+        id: `mock-job-1`,
+        mlsId: '123456',
+        propertyAddress: '123 Ocean Drive, Miami, FL',
+        stage: 'Just Listed' as any,
+        sourceFolderPath: '/listings/123-ocean-drive',
+        status: 'Completed',
+        createdBy: 'Agent Smith',
+        createdAt: new Date(Date.now() - 86400000),
+        updatedAt: new Date()
+      },
+      {
+        id: `mock-job-2`,
+        mlsId: '789012',
+        propertyAddress: '456 Mountain View, Aspen, CO',
+        stage: 'Coming Soon' as any,
+        sourceFolderPath: '/listings/456-mountain-view',
+        status: 'Pending_Generation',
+        createdBy: 'Agent Doe',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
   }
 }
