@@ -16,6 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
             allJobs = jobs;
             renderJobs(jobs);
             updateStats(jobs);
+            
+            // Check for mock mode
+            const isMock = jobs.some(j => j.id.startsWith('mock-job'));
+            const statusText = document.querySelector('.status-text');
+            const dot = document.querySelector('.dot');
+            if (isMock) {
+                statusText.textContent = 'Mock Mode Active (DB Disconnected)';
+                dot.style.background = 'var(--warning)';
+                dot.style.boxShadow = '0 0 0 4px rgba(245, 158, 11, 0.2)';
+            } else {
+                statusText.textContent = 'System Active (Connected)';
+                dot.style.background = 'var(--success)';
+                dot.style.boxShadow = '0 0 0 4px rgba(34, 197, 94, 0.2)';
+            }
         } catch (error) {
             console.error('Failed to fetch jobs:', error);
             jobsContainer.innerHTML = '<div class="error">Failed to load pipeline data. Please ensure the server is running.</div>';
