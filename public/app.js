@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allJobs = jobs;
             renderJobs(jobs);
             updateStats(jobs);
-            
+
             // Check for mock mode
             const isMock = jobs.some(j => j.id.startsWith('mock-job'));
             const statusText = document.querySelector('.status-text');

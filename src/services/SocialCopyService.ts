@@ -84,7 +84,7 @@ export class SocialCopyService {
           return response.data.choices[0].message.content.trim();
         }
       } catch (error) {
-        console.warn('OpenAI API failed. Falling back to template.');
+        return '[API_ERROR] Failed to fetch live completion from OpenAI';
       }
     }
 
