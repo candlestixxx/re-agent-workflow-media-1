@@ -3,6 +3,7 @@ import { AutomationTriggerService } from './services/AutomationTriggerService';
 import { SocialCopyService } from './services/SocialCopyService';
 import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
+import { PerformanceMonitor } from './utils/PerformanceMonitor';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,10 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
   try {
     // 1. Trigger service safely verifies the folder structures and spins up a job
-    const job = await AutomationTriggerService.handleWebhook(payload);
+    PerformanceMonitor.snapshotMemory();
+    const job = await PerformanceMonitor.measure('handleWebhook', async () => {
+      return await AutomationTriggerService.handleWebhook(payload);
+    });
 
     if (!job) {
       res.status(200).json({ message: 'Payload ignored. Event type not actionable.' });
@@ -41,21 +45,25 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
     // 2. Asynchronously Generate Social Copy
     console.log('\n[2] Generating Social Copy via AI Wrapper...');
-    const copy = await SocialCopyService.generateSocialCopy(
+    const copy = await PerformanceMonitor.measure('generateSocialCopy', async () => {
+      return await SocialCopyService.generateSocialCopy(
       job.propertyAddress,
       job.stage,
       ['Beautiful landscaping', 'Modern kitchen'] // Example highlights
     );
+    });
     console.log(`✅ Copy Generated: "${copy.substring(0, 50)}..."`);
 
     // 3. Asynchronously Generate Landing Page
     console.log('\n[3] Building Lofty Landing Page Skeleton...');
-    const landingPage = await LoftyIntegrationService.createOrUpdateLandingPage(
+    const landingPage = await PerformanceMonitor.measure('createLandingPage', async () => {
+      return await LoftyIntegrationService.createOrUpdateLandingPage(
       job.id,
       job.propertyAddress,
       `${job.sourceFolderPath}/hero.jpg`,
       ['Beautiful landscaping', 'Modern kitchen']
     );
+    });
     console.log(`✅ Landing Page Job Status: ${landingPage.publishStatus}`);
 
     // 4. Draft the final Social Post artifact
@@ -74,6 +82,9 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
     console.log(`✅ Draft Created (${draft.platform}). Pending Approval.`);
     console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
+    PerformanceMonitor.snapshotMemory();
+    console.log(PerformanceMonitor.getAverages());
+    PerformanceMonitor.clear();
 
   } catch (error) {
     console.error('❌ Pipeline Error:', error instanceof Error ? error.message : error);
