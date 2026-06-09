@@ -7,7 +7,8 @@ import { SocialPostDraft } from '../../src/models/SocialPostDraft';
 
 // Skip this deep integration test locally if live keys are not fully present.
 // We require at least ONE major platform key to confidently say the E2E works.
-const runE2E = process.env.DATABASE_URL && process.env.OPENAI_API_KEY ? describe : describe.skip;
+// Temporarily executing locally to verify integration
+const runE2E = describe;
 
 runE2E('Pipeline End-to-End Walkthrough', () => {
   it('should take a mock webhook payload and drive it completely through the pipeline', async () => {
