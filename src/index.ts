@@ -3,11 +3,105 @@ import { AutomationTriggerService } from './services/AutomationTriggerService';
 import { SocialCopyService } from './services/SocialCopyService';
 import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
+import { DatabaseService } from './services/DatabaseService';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+/**
+ * Root route serving a simple dashboard.
+ */
+app.get('/', async (req: Request, res: Response) => {
+  const jobs = await DatabaseService.getAllListingMediaJobs();
+  
+  const html = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Marketing Pipeline Dashboard</title>
+        <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f4f7f6; }
+            h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+            .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+            .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .card h3 { margin-top: 0; color: #7f8c8d; font-size: 0.9rem; text-transform: uppercase; }
+            .card p { font-size: 1.8rem; font-weight: bold; margin: 0; color: #2c3e50; }
+            table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+            th { background-color: #3498db; color: white; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
+            tr:hover { background-color: #f9f9f9; }
+            .status { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+            .status-pending { background: #ffeaa7; color: #d63031; }
+            .status-completed { background: #55efc4; color: #00b894; }
+            .nav { margin-bottom: 20px; }
+            .nav a { margin-right: 15px; color: #3498db; text-decoration: none; font-weight: bold; }
+            .nav a:hover { text-decoration: underline; }
+        </style>
+    </head>
+    <body>
+        <h1>Real Estate Marketing Media Pipeline</h1>
+        <div class="nav">
+            <a href="/">Dashboard</a>
+            <a href="/health">Health Check</a>
+            <a href="/api/jobs">JSON API</a>
+        </div>
+        
+        <div class="stats">
+            <div class="card">
+                <h3>Total Jobs</h3>
+                <p>${jobs.length}</p>
+            </div>
+            <div class="card">
+                <h3>Active Pipeline</h3>
+                <p>${jobs.filter(j => j.status !== 'Published').length}</p>
+            </div>
+            <div class="card">
+                <h3>System Status</h3>
+                <p style="color: #00b894;">Online</p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Job ID</th>
+                    <th>Property Address</th>
+                    <th>Stage</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${jobs.length > 0 ? jobs.map(job => `
+                    <tr>
+                        <td><code>${job.id}</code></td>
+                        <td>${job.propertyAddress}</td>
+                        <td>${job.stage}</td>
+                        <td><span class="status ${job.status === 'Published' ? 'status-completed' : 'status-pending'}">${job.status}</span></td>
+                        <td>${new Date(job.createdAt).toLocaleString()}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" style="text-align:center;">No jobs found in the pipeline.</td></tr>'}
+            </tbody>
+        </table>
+        
+        <p style="margin-top: 20px; font-size: 0.8rem; color: #95a5a6;">Server Port: ${PORT} | Environment: Production</p>
+    </body>
+    </html>
+  `;
+  res.send(html);
+});
+
+/**
+ * JSON API for listing jobs.
+ */
+app.get('/api/jobs', async (req: Request, res: Response) => {
+  const jobs = await DatabaseService.getAllListingMediaJobs();
+  res.json(jobs);
+});
 
 /**
  * Health check endpoint.
