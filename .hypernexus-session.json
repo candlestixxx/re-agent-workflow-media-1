@@ -2,5 +2,9 @@
   "isAutoDriveActive": false,
   "activeGoal": null,
   "lastObjective": null,
+<<<<<<< HEAD
   "lastHeartbeat": 1780779202631
+=======
+  "lastHeartbeat": 1780435282948
+>>>>>>> feature/init-media-pipeline-17967464845567188821
 }
