@@ -14,6 +14,36 @@ export class FolderDetectionService {
   ];
 
   /**
+   * Discovers all subdirectories within the default search paths.
+   * Useful for manual selection from the dashboard.
+   */
+  public static discoverAvailableFolders(): { name: string; path: string }[] {
+    const discovered: { name: string; path: string }[] = [];
+
+    for (const searchPath of this.defaultPaths) {
+      if (!searchPath || !fs.existsSync(searchPath)) continue;
+
+      try {
+        const entries = fs.readdirSync(searchPath, { withFileTypes: true });
+        for (const entry of entries) {
+          if (entry.isDirectory()) {
+            discovered.push({
+              name: entry.name,
+              path: path.join(searchPath, entry.name)
+            });
+          }
+        }
+      } catch (error) {
+        continue;
+      }
+    }
+
+    // Filter out obvious system/non-property folders to keep it clean
+    const ignoredFolders = ['node_modules', '.git', 'AppData', 'Cookies', 'Local Settings', 'My Documents', 'NetHood', 'PrintHood', 'Recent', 'SendTo', 'Start Menu', 'Templates'];
+    return discovered.filter(f => !ignoredFolders.includes(f.name));
+  }
+
+  /**
    * Searches for a property folder matching the given address across priority paths.
    * @param address The street address to search for (e.g., "123 Main St").
    * @param overridePaths Optional paths to search instead of the defaults.
