@@ -187,7 +187,10 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
   try {
     // 1. Trigger service safely verifies the folder structures and spins up a job
-    const job = await AutomationTriggerService.handleWebhook(payload);
+    PerformanceMonitor.snapshotMemory();
+    const job = await PerformanceMonitor.measure('handleWebhook', async () => {
+      return await AutomationTriggerService.handleWebhook(payload);
+    });
 
     if (!job) {
       res.status(200).json({ message: 'Payload ignored. Event type not actionable.' });
@@ -203,7 +206,8 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
     // 2. Asynchronously Generate Social Copy
     console.log('\n[2] Generating Social Copy via AI Wrapper...');
-    const copy = await SocialCopyService.generateSocialCopy(
+    const copy = await PerformanceMonitor.measure('generateSocialCopy', async () => {
+      return await SocialCopyService.generateSocialCopy(
       job.propertyAddress,
       job.stage,
       ['Beautiful landscaping', 'Modern kitchen'] // Example highlights
@@ -236,6 +240,9 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 
     console.log('✅ Draft Created (' + draft.platform + '). Pending Approval.');
     console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
+    PerformanceMonitor.snapshotMemory();
+    console.log(PerformanceMonitor.getAverages());
+    PerformanceMonitor.clear();
 
   } catch (error) {
     console.error('❌ Pipeline Error:', error instanceof Error ? error.message : error);

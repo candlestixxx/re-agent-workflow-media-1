@@ -30,8 +30,10 @@ The requirements and project scope were derived from a provided conversation log
 
 ## Known Limitations / Gaps
 - External REST integrations fallback to mocked CI responses if their respective `.env` tokens are omitted. This is expected architecture to prevent secure pipelines from failing during automated test bounds.
-- The system currently represents a fully tested orchestration skeleton (v1.9.0). Only highly specific internal business logic adapters (like swapping FFmpeg local scripts into `VideoProcessingService`) remain for final production deployments.
+- The system represents a fully tested orchestration engine (v2.8.0). It incorporates a robust Postgres storage adapter alongside live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps
-- Initialize CI pipelines mapping the Jest test boundaries out to GitHub Actions to enforce safe build triggers continuously.
+- Hand off to the Operations team for final live-environment dry runs.
+- Have Operations team inject live keys into `.env` and verify end-to-end sandbox connectivity via the new integration test suite.
+- Provision production PostgreSQL clusters and route the `DATABASE_URL`.
