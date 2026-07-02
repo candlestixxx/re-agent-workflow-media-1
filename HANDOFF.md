@@ -28,9 +28,13 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented `JustSoldPipelineService` to isolate logic for when listings hit the 'Just Sold' milestone, automatically generating parallel social media drafts to celebrate the sale.
 - Implemented `BatchProcessingService` to process queue arrays of property addresses, safely wrapping individual errors/missing folders so that the batch doesn't crash entirely.
 
+## What I Learned (Session Context Update)
+- Detected conflicts between `main` and `origin/feature/init-media-pipeline-17967464845567188821` specifically involving `package.json`, `src/index.ts`, `src/services/DatabaseService.ts`, and `src/services/FolderDetectionService.ts`.
+- Observed that the `start` script path inside `package.json` required updating to map to `dist/src/index.js` for proper successful build/start executions using the active node environment.
+
 ## Known Limitations / Gaps
 - External REST integrations fallback to mocked CI responses if their respective `.env` tokens are omitted. This is expected architecture to prevent secure pipelines from failing during automated test bounds.
-- The system represents a fully tested orchestration engine (v2.8.0). It incorporates a robust Postgres storage adapter alongside live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
+- The system represents a fully tested orchestration engine (v2.9.0). It incorporates a robust Postgres storage adapter alongside live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.0] - Branch Merge & Repository Sync
+### Fixed
+- Merged the `feature/init-media-pipeline-17967464845567188821` branch resolving conflicts in `package.json`, `src/index.ts`, `src/services/DatabaseService.ts`, and `src/services/FolderDetectionService.ts`.
+- Updated `start` script path in `package.json` to properly map to the `dist/src/index.js` file path.
+
 ## [2.8.0] - Slack/Discord Alerting Integration
 ### Added
 - Created `AlertingService.ts` providing programmatic HTTP POST calls to send text/content payloads directly to mapped Slack or Discord webhooks.

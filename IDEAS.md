@@ -1,0 +1,19 @@
+# IDEAS
+
+## Feature Pivots & Architectual Expansions
+
+### 1. WebSockets for Real-Time UI Updates
+- **Concept:** Replace standard REST endpoints with a `Socket.io` implementation on the Express server to pipe job states in real-time to the dashboard.
+- **Why:** Reduces polling and enhances the user experience as batch generation runs take a long time (AI image rendering).
+
+### 2. Microservice Architecture Split
+- **Concept:** Split the monolith `src/index.ts` into modular microservices based on domain logic (e.g., `ImageGenerationService`, `SocialCopyService`).
+- **Why:** Ensures that if Magnific AI stalls, it does not hold up the approval queues for existing, completed jobs. Use a message broker like RabbitMQ or Redis Pub/Sub to pass job state across boundaries.
+
+### 3. Serverless Functions Migration
+- **Concept:** Port the domain logic into AWS Lambdas or Vercel functions, moving away from a long-running Node container.
+- **Why:** Zero overhead cost when inactive. Triggers run instantly off S3 bucket drops rather than local folder path detection.
+
+### 4. Advanced Frontend Rewrite
+- **Concept:** Drop the simple HTML injection via Express and scaffold a full React/Next.js dashboard application.
+- **Why:** Better state management for batch approvals and easier implementation of sophisticated review controls.
