@@ -2,9 +2,10 @@ import express, { Request, Response } from 'express';
 import { AutomationTriggerService } from './services/AutomationTriggerService';
 import { SocialCopyService } from './services/SocialCopyService';
 import { FolderDetectionService } from './services/FolderDetectionService';
-import { RealEstateCrmService } from './services/RealEstateCrmService';
+import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
 import { DatabaseService } from './services/DatabaseService';
+import { PerformanceMonitor } from './utils/PerformanceMonitor';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -211,27 +212,30 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
       job.propertyAddress,
       job.stage,
       ['Beautiful landscaping', 'Modern kitchen'] // Example highlights
-    );
+      );
+    });
     console.log('✅ Copy Generated: "' + copy.substring(0, 50) + '..."');
 
-    // 3. Asynchronously Sync to Local RealEstateCRM
-    console.log('\n[3] Syncing assets to RealEstateCRM Studio...');
-    const syncResult = await RealEstateCrmService.syncToCrm(
+    // 3. Asynchronously Sync to Local RealEstateCRM / Lofty Landing Page
+    console.log('\n[3] Building Lofty Landing Page Skeleton...');
+    const landingPage = await PerformanceMonitor.measure('createLandingPage', async () => {
+      return await LoftyIntegrationService.createOrUpdateLandingPage(
       job.id,
       job.propertyAddress,
-      copy,
+      `${job.sourceFolderPath}/hero.jpg`,
       ['Beautiful landscaping', 'Modern kitchen']
-    );
-    console.log('✅ CRM Sync Status: ' + (syncResult.success ? 'Success' : 'Failed (' + syncResult.error + ')'));
+      );
+    });
+    console.log(`✅ Landing Page Job Status: ${landingPage.publishStatus}`);
 
     // 4. Draft the final Social Post artifact
     console.log('\n[4] Drafting Social Post for Approval...');
     const draft: SocialPostDraft = {
-      id: 'draft-' + Date.now(),
+      id: `draft-${Date.now()}`,
       jobId: job.id,
       platform: 'Facebook',
       caption: copy,
-      imagePath: job.sourceFolderPath + '/final_export.jpg',
+      imagePath: `${job.sourceFolderPath}/final_export.jpg`,
       approvalStatus: 'Pending',
       publishStatus: 'Draft',
       createdAt: new Date(),
