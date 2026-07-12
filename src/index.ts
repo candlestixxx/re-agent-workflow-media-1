@@ -6,11 +6,22 @@ import { LoftyIntegrationService } from './services/LoftyIntegrationService';
 import { SocialPostDraft } from './models/SocialPostDraft';
 import { DatabaseService } from './services/DatabaseService';
 import { PerformanceMonitor } from './utils/PerformanceMonitor';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const server = http.createServer(app);
+const io = new Server(server);
 
 app.use(express.json());
+
+io.on('connection', (socket) => {
+  console.log('[WebSocket] Client connected');
+  socket.on('disconnect', () => {
+    console.log('[WebSocket] Client disconnected');
+  });
+});
 
 /**
  * Root route serving a simple dashboard.
@@ -90,14 +101,14 @@ app.get('/', async (req: Request, res: Response) => {
                     </thead>
                     <tbody>
                         ${jobs.length > 0 ? jobs.map(job => `
-                            <tr>
+                            <tr id="job-row-${job.id}">
                                 <td><code>${job.id}</code></td>
                                 <td>${job.propertyAddress}</td>
-                                <td>${job.stage}</td>
-                                <td><span class="status ${job.status === 'Published' ? 'status-completed' : 'status-pending'}">${job.status}</span></td>
+                                <td class="job-stage">${job.stage}</td>
+                                <td class="job-status"><span class="status ${job.status === 'Published' ? 'status-completed' : 'status-pending'}">${job.status}</span></td>
                                 <td>${new Date(job.createdAt).toLocaleString()}</td>
                             </tr>
-                        `).join('') : '<tr><td colspan="5" style="text-align:center;">No jobs found in the pipeline.</td></tr>'}
+                        `).join('') : '<tr id="no-jobs-row"><td colspan="5" style="text-align:center;">No jobs found in the pipeline.</td></tr>'}
                     </tbody>
                 </table>
             </div>
@@ -122,7 +133,38 @@ app.get('/', async (req: Request, res: Response) => {
         
         <p style="margin-top: 20px; font-size: 0.8rem; color: #95a5a6;">Server Port: ${PORT} | Environment: Production</p>
 
+        <script src="/socket.io/socket.io.js"></script>
         <script>
+            const socket = io();
+
+            socket.on('job_update', (job) => {
+                const tbody = document.querySelector('tbody');
+                let row = document.getElementById('job-row-' + job.id);
+
+                const statusClass = job.status === 'Published' ? 'status-completed' : 'status-pending';
+                const statusHtml = '<span class="status ' + statusClass + '">' + job.status + '</span>';
+
+                if (row) {
+                    // Update existing row
+                    row.querySelector('.job-stage').innerText = job.stage;
+                    row.querySelector('.job-status').innerHTML = statusHtml;
+                } else {
+                    // Remove "No jobs" row if it exists
+                    const noJobsRow = document.getElementById('no-jobs-row');
+                    if (noJobsRow) noJobsRow.remove();
+
+                    // Create new row
+                    row = document.createElement('tr');
+                    row.id = 'job-row-' + job.id;
+                    row.innerHTML = '<td><code>' + job.id + '</code></td>' +
+                                    '<td>' + job.propertyAddress + '</td>' +
+                                    '<td class="job-stage">' + job.stage + '</td>' +
+                                    '<td class="job-status">' + statusHtml + '</td>' +
+                                    '<td>' + new Date(job.createdAt).toLocaleString() + '</td>';
+                    tbody.prepend(row);
+                }
+            });
+
             async function triggerManualJob(address) {
                 if (!confirm('Start processing media for "' + address + '"?')) return;
                 
@@ -202,6 +244,9 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
     console.log('   Property: ' + job.propertyAddress);
     console.log('   Stage: ' + job.stage);
 
+    // Broadcast initial state
+    io.emit('job_update', job);
+
     // Respond to the webhook early to prevent timeouts; process the rest asynchronously.
     res.status(202).json({ message: 'Job initialized', jobId: job.id });
 
@@ -242,6 +287,10 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
       updatedAt: new Date()
     };
 
+    // Simulate Job Update to 'Pending_Approval'
+    job.status = 'Pending_Approval';
+    io.emit('job_update', job);
+
     console.log('✅ Draft Created (' + draft.platform + '). Pending Approval.');
     console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
     PerformanceMonitor.snapshotMemory();
@@ -259,6 +308,6 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
 });
 
 // Start the Express server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('--- 🚀 Real Estate Marketing Media Pipeline Server listening on port ' + PORT + ' ---');
 });

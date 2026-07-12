@@ -38,3 +38,11 @@
 - ✅ Swap `SocialCopyService` mocks for live Gemini / OpenAI wrapper calls.
 - ✅ Swap `LoftyIntegrationService` mocks for live CRM Landing Page POST endpoints.
 - ✅ Swap `SocialPublishingService` mocks for live Facebook, Instagram, and LinkedIn Graph API routes.
+
+## Phase 9: Real-time UI & Dashboard Enhancements
+- ⬜ Integrate `socket.io` to provide real-time updates to the dashboard table.
+- ⬜ Enhance the frontend to handle live events without page reloads.
+
+## Phase 10: Microservice Architecture
+- ⬜ Split the monolith `src/index.ts` into modular microservices based on domain logic.
+- ⬜ Implement message broker (e.g. RabbitMQ/Redis) for inter-service communication.

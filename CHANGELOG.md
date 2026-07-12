@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.10.0] - WebSocket Real-Time UI Integration
+### Added
+- Integrated `socket.io` to the main Express server to pipe job state updates directly to the frontend.
+- Refactored the dashboard frontend logic in `src/index.ts` to consume live `job_update` events and manipulate DOM table rows dynamically without requiring a hard refresh.
+- Shifted server instantiation bounds from pure Express to wrapping an explicit `http.createServer(app)`.
+
 ## [2.9.0] - Branch Merge & Repository Sync
 ### Fixed
 - Merged the `feature/init-media-pipeline-17967464845567188821` branch resolving conflicts in `package.json`, `src/index.ts`, `src/services/DatabaseService.ts`, and `src/services/FolderDetectionService.ts`.
