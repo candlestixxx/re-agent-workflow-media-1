@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.9.0",
     "@types/pg": "^8.20.0",
+    "@types/redis": "^4.0.10",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
@@ -33,6 +34,7 @@
     "axios": "^1.16.1",
     "express": "^5.2.1",
     "pg": "^8.21.0",
+    "redis": "^6.1.0",
     "socket.io": "^4.8.3"
   }
 }

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.0] - Phase 10 Microservice Pub/Sub Prep
+### Added
+- Integrated `redis` into `docker-compose.yml` to act as a message broker for upcoming microservice extraction boundaries.
+- Scaffolded `src/utils/MessageBroker.ts` wrapper class featuring Publisher/Subscriber hooks mapping domain logic to generic event payloads.
+
 ## [2.10.0] - WebSocket Real-Time UI Integration
 ### Added
 - Integrated `socket.io` to the main Express server to pipe job state updates directly to the frontend.

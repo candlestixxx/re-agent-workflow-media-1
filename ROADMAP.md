@@ -40,8 +40,8 @@
 - ✅ Swap `SocialPublishingService` mocks for live Facebook, Instagram, and LinkedIn Graph API routes.
 
 ## Phase 9: Real-time UI & Dashboard Enhancements
-- ⬜ Integrate `socket.io` to provide real-time updates to the dashboard table.
-- ⬜ Enhance the frontend to handle live events without page reloads.
+- ✅ Integrate `socket.io` to provide real-time updates to the dashboard table.
+- ✅ Enhance the frontend to handle live events without page reloads.
 
 ## Phase 10: Microservice Architecture
 - ⬜ Split the monolith `src/index.ts` into modular microservices based on domain logic.
