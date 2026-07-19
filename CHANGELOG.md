@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.12.0] - Phase 10 Microservice Architecture Split
+### Changed
+- Decoupled heavy domain workflow processing from the main `src/index.ts` webhook endpoint into a dedicated `MicroserviceOrchestrator.ts` worker process.
+- Converted `src/index.ts` into a lightweight API Gateway that rapidly offloads payloads into Redis pub/sub queues and instantly returns HTTP 202 to the CRM.
+- Implemented state-update broadcasting back to the Express gateway via Redis, ensuring the `socket.io` real-time UI remains functional across disconnected processes.
+
 ## [2.11.0] - Phase 10 Microservice Pub/Sub Prep
 ### Added
 - Integrated `redis` into `docker-compose.yml` to act as a message broker for upcoming microservice extraction boundaries.

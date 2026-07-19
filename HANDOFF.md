@@ -33,10 +33,12 @@ The requirements and project scope were derived from a provided conversation log
 - Observed that the `start` script path inside `package.json` required updating to map to `dist/src/index.js` for proper successful build/start executions using the active node environment.
 - Integrated `socket.io` to provide real-time updates to the frontend dashboard, eliminating the need for manual browser reloads.
 - Prepped architecture for Phase 10: Installed Redis and established a `MessageBroker` pub/sub interface to prepare for splitting the monolithic `src/index.ts` webhook engine into distinct, scalable microservice containers.
+- Successfully executed Phase 10 microservice extraction. Converted `src/index.ts` into a lightweight API Gateway that immediately queues webhooks via Redis pub/sub. Shifted the heavy workflow processing domain logic into `src/services/MicroserviceOrchestrator.ts`.
+- Implemented state-update broadcasting from the worker process back to the API Gateway using Redis, ensuring the existing `socket.io` dashboard stays fully responsive to background tasks.
 
 ## Known Limitations / Gaps
 - External REST integrations fallback to mocked CI responses if their respective `.env` tokens are omitted. This is expected architecture to prevent secure pipelines from failing during automated test bounds.
-- The system represents a fully tested orchestration engine (v2.11.0). It incorporates a robust Postgres storage adapter, Redis message broker configuration, and live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
+- The system represents a fully tested orchestration engine (v2.12.0). It incorporates a robust Postgres storage adapter, Redis message broker configuration, and live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps

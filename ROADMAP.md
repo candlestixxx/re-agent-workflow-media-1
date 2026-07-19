@@ -44,5 +44,5 @@
 - ✅ Enhance the frontend to handle live events without page reloads.
 
 ## Phase 10: Microservice Architecture
-- ⬜ Split the monolith `src/index.ts` into modular microservices based on domain logic.
-- ⬜ Implement message broker (e.g. RabbitMQ/Redis) for inter-service communication.
+- ✅ Split the monolith `src/index.ts` into modular microservices based on domain logic.
+- ✅ Implement message broker (e.g. RabbitMQ/Redis) for inter-service communication.

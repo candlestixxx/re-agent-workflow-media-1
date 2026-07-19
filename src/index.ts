@@ -1,11 +1,8 @@
 import express, { Request, Response } from 'express';
-import { AutomationTriggerService } from './services/AutomationTriggerService';
-import { SocialCopyService } from './services/SocialCopyService';
 import { FolderDetectionService } from './services/FolderDetectionService';
-import { LoftyIntegrationService } from './services/LoftyIntegrationService';
-import { SocialPostDraft } from './models/SocialPostDraft';
 import { DatabaseService } from './services/DatabaseService';
-import { PerformanceMonitor } from './utils/PerformanceMonitor';
+import { MessageBroker } from './utils/MessageBroker';
+import { MicroserviceOrchestrator } from './services/MicroserviceOrchestrator';
 import http from 'http';
 import { Server } from 'socket.io';
 
@@ -15,6 +12,18 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
+
+// Initialize the API Gateway subscriptions
+MessageBroker.init().then(() => {
+  MessageBroker.subscribe('job_state_changed', (job) => {
+    console.log(`[API Gateway] Received job state update for ${job.id}`);
+    io.emit('job_update', job);
+  });
+});
+
+// Spin up the background worker (In a true microservice setup, this would be a separate Node process)
+// For Phase 10 demo purposes, we boot it concurrently.
+MicroserviceOrchestrator.startWorker();
 
 io.on('connection', (socket) => {
   console.log('[WebSocket] Client connected');
@@ -222,88 +231,21 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 /**
- * Webhook interceptor for CRM events.
+ * Webhook interceptor for CRM events (API Gateway Boundary).
  */
 app.post('/webhook/crm', async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log('\n[Webhook Received] Event: ' + (payload.event || 'Unknown'));
+  console.log('\n[API Gateway Webhook Received] Event: ' + (payload.event || 'Unknown'));
 
   try {
-    // 1. Trigger service safely verifies the folder structures and spins up a job
-    PerformanceMonitor.snapshotMemory();
-    const job = await PerformanceMonitor.measure('handleWebhook', async () => {
-      return await AutomationTriggerService.handleWebhook(payload);
-    });
+    // Push the payload to Redis for background processing
+    await MessageBroker.publish('job_created', payload);
 
-    if (!job) {
-      res.status(200).json({ message: 'Payload ignored. Event type not actionable.' });
-      return;
-    }
-
-    console.log('✅ Pipeline Job Initialized: ' + job.id);
-    console.log('   Property: ' + job.propertyAddress);
-    console.log('   Stage: ' + job.stage);
-
-    // Broadcast initial state
-    io.emit('job_update', job);
-
-    // Respond to the webhook early to prevent timeouts; process the rest asynchronously.
-    res.status(202).json({ message: 'Job initialized', jobId: job.id });
-
-    // 2. Asynchronously Generate Social Copy
-    console.log('\n[2] Generating Social Copy via AI Wrapper...');
-    const copy = await PerformanceMonitor.measure('generateSocialCopy', async () => {
-      return await SocialCopyService.generateSocialCopy(
-      job.propertyAddress,
-      job.stage,
-      ['Beautiful landscaping', 'Modern kitchen'] // Example highlights
-      );
-    });
-    console.log('✅ Copy Generated: "' + copy.substring(0, 50) + '..."');
-
-    // 3. Asynchronously Sync to Local RealEstateCRM / Lofty Landing Page
-    console.log('\n[3] Building Lofty Landing Page Skeleton...');
-    const landingPage = await PerformanceMonitor.measure('createLandingPage', async () => {
-      return await LoftyIntegrationService.createOrUpdateLandingPage(
-      job.id,
-      job.propertyAddress,
-      `${job.sourceFolderPath}/hero.jpg`,
-      ['Beautiful landscaping', 'Modern kitchen']
-      );
-    });
-    console.log(`✅ Landing Page Job Status: ${landingPage.publishStatus}`);
-
-    // 4. Draft the final Social Post artifact
-    console.log('\n[4] Drafting Social Post for Approval...');
-    const draft: SocialPostDraft = {
-      id: `draft-${Date.now()}`,
-      jobId: job.id,
-      platform: 'Facebook',
-      caption: copy,
-      imagePath: `${job.sourceFolderPath}/final_export.jpg`,
-      approvalStatus: 'Pending',
-      publishStatus: 'Draft',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    // Simulate Job Update to 'Pending_Approval'
-    job.status = 'Pending_Approval';
-    io.emit('job_update', job);
-
-    console.log('✅ Draft Created (' + draft.platform + '). Pending Approval.');
-    console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
-    PerformanceMonitor.snapshotMemory();
-    console.log(PerformanceMonitor.getAverages());
-    PerformanceMonitor.clear();
-
+    // Immediately respond to the CRM to prevent timeouts
+    res.status(202).json({ message: 'Payload received and queued for processing.' });
   } catch (error) {
-    console.error('❌ Pipeline Error:', error instanceof Error ? error.message : error);
-
-    // If headers haven't been sent yet, return the error to the caller
-    if (!res.headersSent) {
-      res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
-    }
+    console.error('❌ Gateway Error:', error instanceof Error ? error.message : error);
+    res.status(500).json({ error: 'Failed to queue payload' });
   }
 });
 
