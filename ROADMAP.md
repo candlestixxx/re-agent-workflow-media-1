@@ -46,3 +46,7 @@
 ## Phase 10: Microservice Architecture
 - ✅ Split the monolith `src/index.ts` into modular microservices based on domain logic.
 - ✅ Implement message broker (e.g. RabbitMQ/Redis) for inter-service communication.
+
+## Phase 11: Advanced Frontend Rewrite
+- ⬜ Replace basic HTML templating with a robust React/Vite Single Page Application.
+- ⬜ Map WebSocket hooks seamlessly into React state management for UI reactivity.

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.13.0] - React/Vite Frontend Single Page Application
+### Added
+- Scaffolded a new Vite-powered React UI dashboard in the `/frontend` directory.
+- Refactored `src/index.ts` to statically serve the compiled React artifacts from `/frontend/dist`.
+- Updated NPM scripts to concurrently manage package installation and building for both backend and frontend environments upon a `npm run build` command.
+- Decoupled `socket.io-client` event parsing into robust React state management (`useEffect` and `useState`).
+
 ## [2.12.0] - Phase 10 Microservice Architecture Split
 ### Changed
 - Decoupled heavy domain workflow processing from the main `src/index.ts` webhook endpoint into a dedicated `MicroserviceOrchestrator.ts` worker process.

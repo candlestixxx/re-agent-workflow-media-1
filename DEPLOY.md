@@ -41,7 +41,7 @@
      psql -d <your-database-name> -f migrations/001_initial_schema.sql
      ```
 
-3. **Build the project:**
+3. **Build the project (Includes Vite Frontend and TypeScript Backend Compilation):**
    ```bash
    npm run build
    ```
