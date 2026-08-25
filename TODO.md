@@ -23,4 +23,5 @@
 19. **Express API Bindings**: Spin up persistent REST endpoints listening for CRM webhooks, responding with 202 async statuses. (Completed)
 20. **Database Initialization**: Implement PostgreSQL persistence layer mapping `ListingMediaJob` records. (Completed)
 21. **Real-time UI Dashboard**: Integrate `socket.io` into `src/index.ts` to push live pipeline execution updates to the frontend dashboard. (Completed)
-22. **Microservice Splitting**: Break apart monolithic express routes into specialized containerized sub-services via Redis Pub/Sub events. (In Progress)
+22. **Microservice Splitting**: Break apart monolithic express routes into specialized containerized sub-services via Redis Pub/Sub events. (Completed)
+23. **React Dashboard Build**: Scaffold a Vite frontend replacing the inline HTML payload served by Express. Wire `socket.io-client` state hooks into UI. (In Progress)
