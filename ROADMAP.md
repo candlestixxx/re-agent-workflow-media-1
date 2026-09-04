@@ -52,5 +52,9 @@
 - ✅ Map WebSocket hooks seamlessly into React state management for UI reactivity.
 
 ## Phase 12: Resiliency & Dead Letter Queues
-- ⬜ Implement a Dead Letter Queue (DLQ) mechanism for failed pipeline jobs.
-- ⬜ Add an API endpoint and UI button to manually retry failed jobs from the dashboard.
+- ✅ Implement a Dead Letter Queue (DLQ) mechanism for failed pipeline jobs.
+- ✅ Add an API endpoint and UI button to manually retry failed jobs from the dashboard.
+
+## Phase 13: Advanced Video Assembly
+- ✅ Integrate `fluent-ffmpeg` to map video assembly workflows dynamically.
+- ✅ Replaced the mock video rendering stub with a robust child process sequence capable of stitching listing imagery into functional MP4 streams optimized for the web.

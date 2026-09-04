@@ -25,4 +25,5 @@
 21. **Real-time UI Dashboard**: Integrate `socket.io` into `src/index.ts` to push live pipeline execution updates to the frontend dashboard. (Completed)
 22. **Microservice Splitting**: Break apart monolithic express routes into specialized containerized sub-services via Redis Pub/Sub events. (Completed)
 23. **React Dashboard Build**: Scaffold a Vite frontend replacing the inline HTML payload served by Express. Wire `socket.io-client` state hooks into UI. (Completed)
-24. **Retry Logic**: Implement job failure catching and an endpoint `/api/jobs/:id/retry` to republish failed jobs. Add UI components to support this. (In Progress)
+24. **Retry Logic**: Implement job failure catching and an endpoint `/api/jobs/:id/retry` to republish failed jobs. Add UI components to support this. (Completed)
+25. **FFmpeg Assembly**: Connect `fluent-ffmpeg` to stitch standard listing media payloads into deployable MP4 streams. (Completed)
