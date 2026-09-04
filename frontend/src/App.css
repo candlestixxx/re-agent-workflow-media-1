@@ -23,3 +23,7 @@ tr:hover { background-color: #f9f9f9; }
 .discovery-item { background: white; padding: 10px; border-radius: 4px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
 .discovery-item span { font-size: 0.9rem; font-weight: 500; }
 .discovery-item code { font-size: 0.75rem; color: #7f8c8d; }
+
+.status-failed { background: #ff7675; color: white; }
+.retry-btn { background: #e17055; font-size: 0.7rem; padding: 4px 8px; }
+.retry-btn:hover { background: #d63031; }

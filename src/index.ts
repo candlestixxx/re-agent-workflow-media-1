@@ -60,6 +60,43 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 /**
+ * DLQ Retry Endpoint
+ */
+app.post('/api/jobs/:id/retry', async (req: Request, res: Response) => {
+  const jobId = req.params.id;
+  console.log(`\n[API Gateway] Received retry request for job: ${jobId}`);
+
+  try {
+    const jobs = await DatabaseService.getAllListingMediaJobs();
+    const jobToRetry = jobs.find(j => j.id === jobId);
+
+    if (!jobToRetry) {
+      res.status(404).json({ error: 'Job not found' });
+      return;
+    }
+
+    if (jobToRetry.status !== 'Failed') {
+      res.status(400).json({ error: 'Only failed jobs can be retried' });
+      return;
+    }
+
+    // Republish to worker queue
+    const retryPayload = {
+      event: 'listing.retry',
+      listingId: jobToRetry.mlsId || jobToRetry.id,
+      address: jobToRetry.propertyAddress,
+      agentId: jobToRetry.createdBy
+    };
+
+    await MessageBroker.publish('job_created', retryPayload);
+    res.status(202).json({ message: 'Job requeued successfully' });
+  } catch (error) {
+    console.error('❌ Gateway Retry Error:', error);
+    res.status(500).json({ error: 'Failed to requeue job' });
+  }
+});
+
+/**
  * Webhook interceptor for CRM events (API Gateway Boundary).
  */
 app.post('/webhook/crm', async (req: Request, res: Response) => {

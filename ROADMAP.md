@@ -48,5 +48,9 @@
 - ✅ Implement message broker (e.g. RabbitMQ/Redis) for inter-service communication.
 
 ## Phase 11: Advanced Frontend Rewrite
-- ⬜ Replace basic HTML templating with a robust React/Vite Single Page Application.
-- ⬜ Map WebSocket hooks seamlessly into React state management for UI reactivity.
+- ✅ Replace basic HTML templating with a robust React/Vite Single Page Application.
+- ✅ Map WebSocket hooks seamlessly into React state management for UI reactivity.
+
+## Phase 12: Resiliency & Dead Letter Queues
+- ⬜ Implement a Dead Letter Queue (DLQ) mechanism for failed pipeline jobs.
+- ⬜ Add an API endpoint and UI button to manually retry failed jobs from the dashboard.

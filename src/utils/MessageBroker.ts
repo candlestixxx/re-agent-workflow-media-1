@@ -31,7 +31,9 @@ export class MessageBroker {
   }
 
   public static async publish(channel: string, message: any) {
-    if (!this.initialized) return;
+    if (!this.initialized) {
+      throw new Error('MessageBroker is not initialized. Cannot publish message.');
+    }
     await this.publisher.publish(channel, JSON.stringify(message));
   }
 

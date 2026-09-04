@@ -1,6 +1,7 @@
 import { AutomationTriggerService } from './AutomationTriggerService';
 import { SocialCopyService } from './SocialCopyService';
 import { LoftyIntegrationService } from './LoftyIntegrationService';
+import { DatabaseService } from './DatabaseService';
 import { SocialPostDraft } from '../models/SocialPostDraft';
 import { PerformanceMonitor } from '../utils/PerformanceMonitor';
 import { MessageBroker } from '../utils/MessageBroker';
@@ -13,6 +14,8 @@ export class MicroserviceOrchestrator {
     await MessageBroker.subscribe('job_created', async (payload: any) => {
       console.log(`[Worker] Received job execution request for webhook payload: ${payload.event}`);
 
+      let currentJob: any = null;
+
       try {
         PerformanceMonitor.snapshotMemory();
         const job = await PerformanceMonitor.measure('handleWebhook', async () => {
@@ -23,6 +26,8 @@ export class MicroserviceOrchestrator {
           console.log('[Worker] Payload ignored. Event type not actionable.');
           return;
         }
+
+        currentJob = job;
 
         console.log(`✅ Pipeline Job Initialized: ${job.id}`);
         console.log(`   Property: ${job.propertyAddress}`);
@@ -80,6 +85,14 @@ export class MicroserviceOrchestrator {
 
       } catch (error) {
         console.error('❌ Worker Pipeline Error:', error instanceof Error ? error.message : error);
+
+        if (currentJob) {
+          // Implement Dead Letter Queue logic by emitting a failed state
+          currentJob.status = 'Failed';
+          await DatabaseService.updateJobStatus(currentJob.id, 'Failed');
+          await MessageBroker.publish('job_state_changed', currentJob);
+          console.log(`[DLQ] Job ${currentJob.id} moved to Failed state.`);
+        }
       }
     });
   }
