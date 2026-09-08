@@ -78,6 +78,25 @@ function App() {
     }
   };
 
+  const retryJob = async (jobId: string) => {
+    if (!window.confirm(`Are you sure you want to retry job ${jobId}?`)) return;
+
+    try {
+      const response = await fetch(`/api/jobs/${jobId}/retry`, {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        alert('Job requeued successfully.');
+      } else {
+        const error = await response.json();
+        alert('Error retrying job: ' + (error.error || 'Unknown error'));
+      }
+    } catch (err: any) {
+      alert('Failed to connect to server: ' + err.message);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <h1>Real Estate Marketing Media Pipeline</h1>
@@ -117,11 +136,18 @@ function App() {
                   <td>{job.propertyAddress}</td>
                   <td>{job.stage}</td>
                   <td>
-                    <span className={`status ${job.status === 'Published' ? 'status-completed' : 'status-pending'}`}>
+                    <span className={`status ${job.status === 'Published' ? 'status-completed' : job.status === 'Failed' ? 'status-failed' : 'status-pending'}`}>
                       {job.status}
                     </span>
                   </td>
-                  <td>{new Date(job.createdAt).toLocaleString()}</td>
+                  <td>
+                    {new Date(job.createdAt).toLocaleString()}
+                    {job.status === 'Failed' && (
+                      <button className="btn retry-btn" onClick={() => retryJob(job.id)} style={{ marginLeft: '10px' }}>
+                        Retry
+                      </button>
+                    )}
+                  </td>
                 </tr>
               )) : (
                 <tr><td colSpan={5} style={{ textAlign: 'center' }}>No jobs found in the pipeline.</td></tr>

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.14.0] - Resiliency & Dead Letter Queue
+### Added
+- Implemented a Dead Letter Queue (DLQ) mechanism inside `MicroserviceOrchestrator.ts` to catch pipeline errors and emit a "Failed" status directly to the UI.
+- Deployed a `/api/jobs/:id/retry` backend endpoint to intercept failed jobs and republish them safely to the Redis worker pipeline.
+- Upgraded the React Dashboard to natively render a "Retry" button on failed jobs, providing immediate recovery tools to the end user.
+
 ## [2.13.0] - React/Vite Frontend Single Page Application
 ### Added
 - Scaffolded a new Vite-powered React UI dashboard in the `/frontend` directory.

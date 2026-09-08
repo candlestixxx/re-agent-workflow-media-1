@@ -106,4 +106,27 @@ export class DatabaseService {
       return [];
     }
   }
+
+  /**
+   * Updates an existing ListingMediaJob's status.
+   */
+  public static async updateJobStatus(jobId: string, status: string): Promise<void> {
+    const query = `
+      UPDATE listing_media_jobs
+      SET status = $1, updated_at = $2
+      WHERE id = $3;
+    `;
+    const values = [status, new Date(), jobId];
+
+    try {
+      const client = await this.getPool().connect();
+      try {
+        await client.query(query, values);
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      console.error('Database update failed:', error);
+    }
+  }
 }
