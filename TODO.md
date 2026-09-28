@@ -27,3 +27,4 @@
 23. **React Dashboard Build**: Scaffold a Vite frontend replacing the inline HTML payload served by Express. Wire `socket.io-client` state hooks into UI. (Completed)
 24. **Retry Logic**: Implement job failure catching and an endpoint `/api/jobs/:id/retry` to republish failed jobs. Add UI components to support this. (Completed)
 25. **FFmpeg Assembly**: Connect `fluent-ffmpeg` to stitch standard listing media payloads into deployable MP4 streams. (Completed)
+26. **AI Auto-Approvals**: Build logic to instantly evaluate jobs in the `Pending_Approval` queue and progress them to `Approved` to achieve a fully headless pipeline. (In Progress)

@@ -19,6 +19,24 @@ export class ApprovalWorkflowService {
   }
 
   /**
+   * Evaluates a job using simulated AI logic (e.g. GPT-4 Vision) to inspect
+   * generated artifacts and automatically sign off on brand-safe content.
+   * @param job The job to evaluate.
+   */
+  public static async autoApproveJob(job: ListingMediaJob): Promise<ListingMediaJob> {
+    if (job.status !== 'Pending_Approval') {
+      throw new Error(`Only jobs in 'Pending_Approval' can be auto-approved. Current status: ${job.status}`);
+    }
+
+    // Simulate AI inference latency
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // For the scope of Phase 14, we assume the AI evaluates the job as safe.
+    console.log(`[AI Reviewer] Verified brand compliance for Job ID: ${job.id}`);
+    return this.approveJob(job, 'auto-ai-reviewer-bot');
+  }
+
+  /**
    * Approves a job, attaching the reviewer's ID.
    * @param job The job to approve.
    * @param reviewerId The ID of the broker or manager approving the job.

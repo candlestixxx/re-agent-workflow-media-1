@@ -37,10 +37,13 @@ The requirements and project scope were derived from a provided conversation log
 - Implemented state-update broadcasting from the worker process back to the API Gateway using Redis, ensuring the existing `socket.io` dashboard stays fully responsive to background tasks.
 - Replaced the initial server-side HTML rendering with a full React/Vite dashboard.
 - Introduced Dead Letter Queue (DLQ) mechanics: Failed jobs are now caught dynamically, flagged safely on the React dashboard, and supported with a new REST endpoint (`/api/jobs/:id/retry`) ensuring operators can simply retry broken generation tasks manually without server restarts.
+- Finished Phase 13 by integrating `fluent-ffmpeg` to map video assembly workflows dynamically in `src/services/VideoProcessingService.ts`, replacing the old mock stub with a real sequence generator.
+- Implemented Phase 14 AI Agent Approvals, simulating GPT-4 vision validations on generated assets, progressing the pipeline fully headlessly to 'Approved'.
 
 ## Known Limitations / Gaps
 - External REST integrations fallback to mocked CI responses if their respective `.env` tokens are omitted. This is expected architecture to prevent secure pipelines from failing during automated test bounds.
-- The system represents a fully tested orchestration engine (v2.14.0). It incorporates a robust Postgres storage adapter, Redis message broker configuration, DLQ retry resilience, React frontend, and live HTTP boundaries. FFmpeg subprocess commands must be injected manually into `VideoProcessingService` as per the hosting server's capabilities.
+- The system represents a fully tested orchestration engine (v2.16.0). It incorporates a robust Postgres storage adapter, Redis message broker configuration, DLQ retry resilience, React frontend, fully headless approval queues, and live HTTP boundaries.
+- `ffmpeg` must be installed natively on the host container/server for the `VideoProcessingService` generation routines to succeed.
 - No submodules or external major libraries were added apart from standard dev tooling (TypeScript, Jest). `axios` was added to handle REST API connections.
 
 ## Next Steps

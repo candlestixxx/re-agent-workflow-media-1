@@ -2,6 +2,7 @@ import { AutomationTriggerService } from './AutomationTriggerService';
 import { SocialCopyService } from './SocialCopyService';
 import { LoftyIntegrationService } from './LoftyIntegrationService';
 import { DatabaseService } from './DatabaseService';
+import { ApprovalWorkflowService } from './ApprovalWorkflowService';
 import { SocialPostDraft } from '../models/SocialPostDraft';
 import { PerformanceMonitor } from '../utils/PerformanceMonitor';
 import { MessageBroker } from '../utils/MessageBroker';
@@ -73,11 +74,17 @@ export class MicroserviceOrchestrator {
           updatedAt: new Date()
         };
 
-        // Simulate Job Update to 'Pending_Approval'
-        job.status = 'Pending_Approval';
-        await MessageBroker.publish('job_state_changed', job);
+        // Submit Job to 'Pending_Approval' queue
+        let currentStatusJob = ApprovalWorkflowService.submitForApproval(job);
+        await MessageBroker.publish('job_state_changed', currentStatusJob);
+        console.log(`✅ Draft Created (${draft.platform}). Job state shifted to Pending_Approval.`);
 
-        console.log(`✅ Draft Created (${draft.platform}). Pending Approval.`);
+        // Phase 14: Headless AI Auto-Approval execution
+        console.log('\n[5] Executing AI Agent Compliance Check...');
+        currentStatusJob = await ApprovalWorkflowService.autoApproveJob(currentStatusJob);
+        await MessageBroker.publish('job_state_changed', currentStatusJob);
+        console.log(`✅ Job Auto-Approved by AI Reviewer.`);
+
         console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
         PerformanceMonitor.snapshotMemory();
         console.log(PerformanceMonitor.getAverages());
