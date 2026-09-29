@@ -58,3 +58,7 @@
 ## Phase 13: Advanced Video Assembly
 - ✅ Integrate `fluent-ffmpeg` to map video assembly workflows dynamically.
 - ✅ Replaced the mock video rendering stub with a robust child process sequence capable of stitching listing imagery into functional MP4 streams optimized for the web.
+
+## Phase 14: AI Agent Approvals
+- ⬜ Implement headless pipeline verification by replacing human bottlenecks with simulated AI compliance checks.
+- ⬜ Automate the transition from `Pending_Approval` to `Approved`.

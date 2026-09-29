@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.16.0] - AI Agent Approvals
+### Added
+- Implemented `autoApproveJob` within `ApprovalWorkflowService.ts` to dynamically sign off on pipeline assets simulating a GPT-4 Vision inspection layer.
+- Upgraded the `MicroserviceOrchestrator` to instantly pass generated pipelines through the AI evaluation engine, achieving a fully headless, no-human-bottleneck execution cycle.
+
+## [2.15.0] - Advanced Video Assembly
+### Added
+- Integrated `fluent-ffmpeg` to map video assembly workflows dynamically in `src/services/VideoProcessingService.ts`.
+- Replaced the mock video rendering stub with a robust child process sequence capable of stitching listing imagery into functional MP4 streams optimized for the web.
+
 ## [2.14.0] - Resiliency & Dead Letter Queue
 ### Added
 - Implemented a Dead Letter Queue (DLQ) mechanism inside `MicroserviceOrchestrator.ts` to catch pipeline errors and emit a "Failed" status directly to the UI.
