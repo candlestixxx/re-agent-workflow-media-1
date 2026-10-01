@@ -1,5 +1,13 @@
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+import { mkdir } from 'fs/promises';
+import path from 'path';
 import { VideoProcessingJob, VideoSourceType, VideoAspectRatio } from '../models/VideoProcessingJob';
 import { ListingStage } from '../models/ListingMediaJob';
+
+const execFileAsync = promisify(execFile);
+
+const OUTPUT_DIR = process.env.VIDEO_OUTPUT_DIR || '/var/tmp/videos';
 
 export class VideoProcessingService {
   /**
@@ -30,22 +38,49 @@ export class VideoProcessingService {
    * Typical flow: Queued -> Editing -> Rendering -> Completed.
    */
   /**
-   * Stub method for integrating external video manipulation libraries.
-   * In a production environment, this method should spawn an FFmpeg child process
-   * or call a cloud rendering API to manipulate the video based on the job's targetRatio.
-   *
-   * Example FFmpeg command structure:
-   * `ffmpeg -i ${job.sourceType}_input.mp4 -vf "crop='min(ih,iw)':'min(ih,iw)'" -c:a copy ${job.listingId}_output.mp4`
+   * Spawns FFmpeg to render video at the target aspect ratio.
+   * Supports crop-to-square (1:1), portrait (9:16), and landscape (16:9).
    */
   public static async executeLocalRendering(job: VideoProcessingJob): Promise<VideoProcessingJob> {
     const renderingJob = this.updateJobStatus(job, 'Rendering');
 
-    // Simulate FFmpeg processing time
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      await mkdir(OUTPUT_DIR, { recursive: true });
 
-    // Resolve completed job with simulated local output path
-    const mockOutputPath = `/var/tmp/videos/${job.listingId}_${job.targetRatio}_rendered.mp4`;
-    return this.updateJobStatus(renderingJob, 'Completed', mockOutputPath);
+      const inputPath = path.join(OUTPUT_DIR, `${job.listingId}_input.mp4`);
+      const outputPath = path.join(OUTPUT_DIR, `${job.listingId}_${job.targetRatio}_rendered.mp4`);
+
+      const vf = this.getVideoFilter(job.targetRatio, job.includeCaptions);
+
+      await execFileAsync('ffmpeg', [
+        '-y',
+        '-i', inputPath,
+        '-vf', vf,
+        '-c:v', 'libx264',
+        '-preset', 'fast',
+        '-crf', '23',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        outputPath,
+      ], { timeout: 300000 });
+
+      return this.updateJobStatus(renderingJob, 'Completed', outputPath);
+    } catch (err: any) {
+      return this.updateJobStatus(renderingJob, 'Failed');
+    }
+  }
+
+  private static getVideoFilter(ratio: VideoAspectRatio, includeCaptions: boolean): string {
+    const filters: Record<string, string> = {
+      '1:1': "crop='min(ih,iw)':'min(ih,iw)'",
+      '9:16': "crop=ih*9/16:ih",
+      '16:9': "crop=iw:ih*9/16",
+    };
+    let vf = filters[ratio] || "crop='min(ih,iw)':'min(ih,iw)'";
+    if (includeCaptions) {
+      vf += ",subtitles=captions.srt:force_style='FontSize=20,PrimaryColour=&H00FFFFFF'";
+    }
+    return vf;
   }
 
   public static updateJobStatus(
