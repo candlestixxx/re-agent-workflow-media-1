@@ -1,16 +1,14 @@
 import { ListingMediaJob, JobStatus } from '../models/ListingMediaJob';
+import { GeneratedAsset } from '../models/GeneratedAsset';
+import { SocialPostDraft } from '../models/SocialPostDraft';
+import { AIBrandReviewService, ReviewResult } from './AIBrandReviewService';
+import { AlertingService } from './AlertingService';
 
 export class ApprovalWorkflowService {
-  /**
-   * Submits a job for approval, transitioning its state to 'Pending_Approval'.
-   * @param job The job to submit.
-   * @returns The updated job.
-   */
   public static submitForApproval(job: ListingMediaJob): ListingMediaJob {
     if (job.status !== 'Draft' && job.status !== 'Pending_Generation') {
-      throw new Error(`Cannot submit job for approval from status: ${job.status}`);
+      throw new Error('Cannot submit job for approval from status: ' + job.status);
     }
-
     return {
       ...job,
       status: 'Pending_Approval',
@@ -18,35 +16,38 @@ export class ApprovalWorkflowService {
     };
   }
 
-  /**
-   * Evaluates a job using simulated AI logic (e.g. GPT-4 Vision) to inspect
-   * generated artifacts and automatically sign off on brand-safe content.
-   * @param job The job to evaluate.
-   */
-  public static async autoApproveJob(job: ListingMediaJob): Promise<ListingMediaJob> {
+  public static async autoApproveJob(
+    job: ListingMediaJob,
+    assets: GeneratedAsset[] = [],
+    socialPosts: SocialPostDraft[] = []
+  ): Promise<{ job: ListingMediaJob; review: ReviewResult }> {
     if (job.status !== 'Pending_Approval') {
-      throw new Error(`Only jobs in 'Pending_Approval' can be auto-approved. Current status: ${job.status}`);
+      throw new Error('Only jobs in Pending_Approval can be auto-approved. Current: ' + job.status);
     }
 
-    // Simulate AI inference latency
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const review = await AIBrandReviewService.reviewJob(job, assets, socialPosts);
+    await AIBrandReviewService.logCompliance(job.id, 'Asset', review);
 
-    // For the scope of Phase 14, we assume the AI evaluates the job as safe.
-    console.log(`[AI Reviewer] Verified brand compliance for Job ID: ${job.id}`);
-    return this.approveJob(job, 'auto-ai-reviewer-bot');
+    if (review.passed) {
+      const approvedJob = this.approveJob(job, review.reviewer);
+      await AlertingService.sendAlert(
+        'Job ' + job.id + ' auto-approved by AI (' + review.score + '% compliance)',
+        'info'
+      );
+      return { job: approvedJob, review };
+    }
+
+    await AlertingService.sendAlert(
+      'Job ' + job.id + ' auto-approval REJECTED: ' + review.comments,
+      'warning'
+    );
+    return { job, review };
   }
 
-  /**
-   * Approves a job, attaching the reviewer's ID.
-   * @param job The job to approve.
-   * @param reviewerId The ID of the broker or manager approving the job.
-   * @returns The updated job.
-   */
   public static approveJob(job: ListingMediaJob, reviewerId: string): ListingMediaJob {
     if (job.status !== 'Pending_Approval') {
-      throw new Error(`Only jobs in 'Pending_Approval' can be approved. Current status: ${job.status}`);
+      throw new Error('Only jobs in Pending_Approval can be approved. Current: ' + job.status);
     }
-
     return {
       ...job,
       status: 'Approved',
@@ -55,20 +56,25 @@ export class ApprovalWorkflowService {
     };
   }
 
-  /**
-   * Transitions an approved job to a Published state.
-   * @param job The job to publish.
-   * @returns The updated job.
-   */
+  public static rejectJob(job: ListingMediaJob, reviewerId: string, reason: string): ListingMediaJob {
+    if (job.status !== 'Pending_Approval') {
+      throw new Error('Only jobs in Pending_Approval can be rejected. Current: ' + job.status);
+    }
+    return {
+      ...job,
+      status: 'Failed',
+      approvedBy: reviewerId,
+      updatedAt: new Date()
+    };
+  }
+
   public static publishJob(job: ListingMediaJob): ListingMediaJob {
     if (job.status !== 'Approved') {
-      throw new Error(`A job must be 'Approved' before it can be published. Current status: ${job.status}`);
+      throw new Error('A job must be Approved before publish. Current: ' + job.status);
     }
-
     if (!job.approvedBy) {
-      throw new Error('A job cannot be published without a recorded approver (approvedBy is empty).');
+      throw new Error('Cannot publish without a recorded approver.');
     }
-
     return {
       ...job,
       status: 'Published',
