@@ -80,10 +80,13 @@ export class MicroserviceOrchestrator {
         console.log(`✅ Draft Created (${draft.platform}). Job state shifted to Pending_Approval.`);
 
         // Phase 14: Headless AI Auto-Approval execution
+        // autoApproveJob returns { job, review } — keep the review available for
+        // logging/audit while carrying the updated job forward.
         console.log('\n[5] Executing AI Agent Compliance Check...');
-        currentStatusJob = await ApprovalWorkflowService.autoApproveJob(currentStatusJob);
+        const { job: approvedJob, review: autoReview } = await ApprovalWorkflowService.autoApproveJob(currentStatusJob);
+        currentStatusJob = approvedJob;
         await MessageBroker.publish('job_state_changed', currentStatusJob);
-        console.log(`✅ Job Auto-Approved by AI Reviewer.`);
+        console.log(`✅ Job Auto-Approved by AI Reviewer. passed=${autoReview.passed} score=${autoReview.score}`);
 
         console.log('\n--- 🎉 Pipeline Execution Cycle Complete ---');
         PerformanceMonitor.snapshotMemory();

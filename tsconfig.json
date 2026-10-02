@@ -1,6 +1,9 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
-  "exclude": ["frontend"],
+  // `dist` must be excluded: tsc emits declarations there, and without this
+  // exclude the next run treats those .d.ts files as inputs and fails with
+  // TS5055 ("would overwrite input file").
+  "exclude": ["frontend", "dist", "node_modules"],
   "compilerOptions": {
     "esModuleInterop": true,
     // File Layout
