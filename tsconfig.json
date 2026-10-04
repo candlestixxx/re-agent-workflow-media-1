@@ -1,9 +1,9 @@
-{
+﻿{
   // Visit https://aka.ms/tsconfig to read more about this file
   // `dist` must be excluded: tsc emits declarations there, and without this
   // exclude the next run treats those .d.ts files as inputs and fails with
   // TS5055 ("would overwrite input file").
-  "exclude": ["frontend", "dist", "node_modules"],
+  "exclude": ["frontend", "dist", "node_modules", "tests"],
   "compilerOptions": {
     "esModuleInterop": true,
     // File Layout
@@ -14,7 +14,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "commonjs",
     "target": "esnext",
-    "types": ["jest", "node"], "ignoreDeprecations": "6.0",
+    "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -47,3 +47,5 @@
     "skipLibCheck": true,
   }
 }
+
+
