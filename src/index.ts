@@ -14,6 +14,14 @@ const io = new Server(server);
 
 app.use(express.json());
 
+// JSON error handler: return JSON instead of HTML stack traces for body-parser errors
+app.use((err: any, _req: Request, res: Response, next: any) => {
+  if (err?.type === 'entity.parse.failed' || err instanceof SyntaxError) {
+    return res.status(400).json({ error: 'Invalid JSON body' });
+  }
+  next(err);
+});
+
 // Initialize the API Gateway subscriptions
 MessageBroker.init().then(() => {
   MessageBroker.subscribe('job_state_changed', (job) => {
