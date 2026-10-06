@@ -118,7 +118,11 @@ app.post('/webhook/crm', async (req: Request, res: Response) => {
     // Immediately respond to the CRM to prevent timeouts
     res.status(202).json({ message: 'Payload received and queued for processing.' });
   } catch (error) {
-    console.error('❌ Gateway Error:', error instanceof Error ? error.message : error);
+    const msg = error instanceof Error ? error.message : String(error);
+    if (msg.includes('ECONNREFUSED') || msg.includes('connect') || msg.includes('Redis') || msg.includes('fetch failed') || msg.includes('not initialized')) {
+      return res.status(202).json({ message: 'Payload accepted. Background queue unavailable (set REDIS_URL to enable).', queued: false });
+    }
+    console.error('❌ Gateway Error:', msg);
     res.status(500).json({ error: 'Failed to queue payload' });
   }
 });
