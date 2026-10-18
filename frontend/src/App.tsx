@@ -101,6 +101,21 @@ function App() {
     <div className="dashboard-container">
       <h1>Real Estate Marketing Media Pipeline</h1>
 
+      {/* Project Goal */}
+      <div style={{ background: '#fff3e0', border: '1px solid #ffcc80', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+          <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#f57c00', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '14px', fontWeight: 'bold', flexShrink: 0 }}>🎬</div>
+          <div>
+            <h2 style={{ fontSize: '14px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>Media Workflow — Photo/Video Pipeline</h2>
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '4px', lineHeight: '1.6' }}>
+              Property photo import, storyboard generation, AI promo videos, and FFmpeg export.
+              Automates the marketing media pipeline from raw listing photos to published promo videos
+              with brand overlay. Part of the <a href="https://excellegacyrealtygroup.site" style={{ color: '#f57c00', textDecoration: 'underline' }}>Excel Legacy Realty Group</a> platform.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="stats">
         <div className="card">
           <h3>Total Jobs</h3>
