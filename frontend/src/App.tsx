@@ -99,7 +99,12 @@ function App() {
 
   return (
     <div className="dashboard-container">
-      <h1>Real Estate Marketing Media Pipeline</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+        <h1>Real Estate Marketing Media Pipeline</h1>
+        <a href="https://excellegacyrealtygroup.site" style={{ fontSize: '13px', color: '#f57c00', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          ← Main Dashboard
+        </a>
+      </div>
 
       {/* Project Goal */}
       <div style={{ background: '#fff3e0', border: '1px solid #ffcc80', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
