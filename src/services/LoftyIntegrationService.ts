@@ -62,9 +62,10 @@ export class LoftyIntegrationService {
         finalStatus = 'Failed';
       }
     } else {
-      // Fallback local mock behavior
-      publishedUrl = `https://crm.lofty.com/landing/${cleanAddress}`;
-      finalStatus = 'Pending'; // Mock implies we are waiting for real tokens
+      // No Lofty token configured — queue nothing and report Pending.
+      // (No fake landing-page URL is constructed.)
+      finalStatus = 'Pending';
+      console.error('[LoftyIntegration] LOFTY_API_KEY not configured — landing page NOT created.');
     }
 
     return {

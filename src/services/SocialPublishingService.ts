@@ -74,9 +74,13 @@ export class SocialPublishingService {
         }
 
       } else {
-        // Fallback or unsupported live platform logic (e.g. CI/CD or missing tokens)
-        publishedUrl = `mock_${draft.platform.toLowerCase()}_url_${draft.id}`;
-        finalStatus = 'Published';
+        // No live platform token configured — do NOT fabricate a published
+        // URL or mark the post Published. A post that never went out must not
+        // appear in analytics/records as if it did.
+        finalStatus = 'Failed';
+        console.error(
+          `[SocialPublishing] ${draft.platform} token not configured — post ${draft.id} NOT published.`
+        );
       }
     } catch (error) {
       finalStatus = 'Failed';

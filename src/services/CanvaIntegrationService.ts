@@ -8,7 +8,9 @@ export class CanvaIntegrationService {
    * @param propertyFolder The local directory where the finished asset should be routed.
    * @param templateId The Canva template ID to base the design on.
    * @param customText Text injections (e.g., Address, Stage) applied to the template.
-   * @returns A promise resolving to the final export file path or mocked path.
+   * @returns A promise resolving to the final export file path.
+   * @throws When Canva is unconfigured or the export fails — never returns a
+   *         fabricated path (downstream stages would treat it as a real asset).
    */
   public static async exportDesign(
     propertyFolder: string,
@@ -18,9 +20,8 @@ export class CanvaIntegrationService {
     const apiKey = process.env.CANVA_API_KEY;
     const teamId = process.env.CANVA_TEAM_ID || 'default_team';
 
-    // Fallback logic for CI/CD or local testing without active tokens
     if (!apiKey) {
-      return path.join(propertyFolder, `mock_canva_export_${templateId}.jpg`);
+      throw new Error('Canva export unavailable: CANVA_API_KEY is not configured.');
     }
 
     const safeText = customText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -52,10 +53,11 @@ export class CanvaIntegrationService {
         return path.join(propertyFolder, `live_canva_export_${teamId}_${createResponse.data.id}_${safeText}.jpg`);
       }
 
-      return path.join(propertyFolder, `live_canva_export_failed_parsing.jpg`);
+      throw new Error('Canva export failed: unexpected response shape.');
 
-    } catch (error) {
-      return path.join(propertyFolder, `live_canva_export_network_error.jpg`);
+    } catch (error: any) {
+      if (error?.message?.startsWith('Canva export')) throw error;
+      throw new Error(`Canva export failed: ${error?.message || 'network error'}`);
     }
   }
 }

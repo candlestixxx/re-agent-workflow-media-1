@@ -15,16 +15,12 @@ describe('CanvaIntegrationService', () => {
     process.env = originalEnv;
   });
 
-  it('should return a local mock filepath when API key is missing', async () => {
+  it('throws when API key is missing (never fabricates an export path)', async () => {
     delete process.env.CANVA_API_KEY;
 
-    const result = await CanvaIntegrationService.exportDesign(
-      '/mock/property',
-      'template-123',
-      'Just Listed 123 Main'
-    );
-
-    expect(result).toBe(path.join('/mock/property', 'mock_canva_export_template-123.jpg'));
+    await expect(
+      CanvaIntegrationService.exportDesign('/mock/property', 'template-123', 'Just Listed 123 Main')
+    ).rejects.toThrow(/CANVA_API_KEY is not configured/);
   });
 
   it('should execute live API requests when API key is present', async () => {
@@ -63,13 +59,13 @@ describe('CanvaIntegrationService', () => {
     );
   });
 
-  it('should handle API errors gracefully during live fetching', async () => {
+  it('throws on API errors instead of returning a fake success path', async () => {
     process.env.CANVA_API_KEY = 'real-api-key';
 
     (((axios.post) as jest.Mock) as jest.Mock).mockRejectedValue(new Error('Network error'));
 
-    const result = await CanvaIntegrationService.exportDesign('/mock/fail', 'tpl-1', 'fail');
-
-    expect(result).toBe(path.join('/mock/fail', 'live_canva_export_network_error.jpg'));
+    await expect(
+      CanvaIntegrationService.exportDesign('/mock/fail', 'tpl-1', 'fail')
+    ).rejects.toThrow(/Canva export failed/);
   });
 });

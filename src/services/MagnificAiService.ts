@@ -7,7 +7,9 @@ export class MagnificAiService {
    * @param sourceImagePath The absolute path or URL to the source image.
    * @param style The requested variation ('day' or 'night').
    * @param variations The number of output variations to generate (default: 3).
-   * @returns A promise resolving to an array of output buffers or mocked string URLs.
+   * @returns A promise resolving to an array of output URLs.
+   * @throws When Magnific is unconfigured or generation fails — never returns
+   *         fabricated buffer paths.
    */
   public static async generateDayNightImages(
     sourceImagePath: string,
@@ -17,11 +19,8 @@ export class MagnificAiService {
     const apiKey = process.env.MAGNIFIC_API_KEY;
     const model = process.env.MAGNIFIC_MODEL || 'google_nano_banana_2';
 
-    // Fallback logic when API key is missing (for CI and local testing)
     if (!apiKey) {
-      return Array.from({ length: variations }).map(
-        (_, i) => `mock_magnific_buffer_${style}_variation_${i + 1}_using_${model}`
-      );
+      throw new Error('Magnific image generation unavailable: MAGNIFIC_API_KEY is not configured.');
     }
 
     const results: string[] = [];

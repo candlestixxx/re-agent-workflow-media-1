@@ -29,13 +29,13 @@ describe('SocialPublishingService', () => {
     process.env = originalEnv;
   });
 
-  it('should successfully publish an approved draft and assign a mock URL', async () => {
-    process.env.NODE_ENV = 'test';
+  it('marks post Failed when no platform token is configured (never fakes a published URL)', async () => {
+    delete process.env.FACEBOOK_GRAPH_TOKEN;
 
     const result = await SocialPublishingService.publishPost(baseDraft);
 
-    expect(result.publishStatus).toBe('Published');
-    expect(result.publishedUrl).toBe('mock_facebook_url_post-123');
+    expect(result.publishStatus).toBe('Failed');
+    expect(result.publishedUrl).toBeUndefined();
   });
 
   it('should execute live Facebook Graph API requests when token is present', async () => {

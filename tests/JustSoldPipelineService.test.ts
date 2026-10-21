@@ -1,6 +1,15 @@
 import { JustSoldPipelineService } from '../src/services/JustSoldPipelineService';
 import { ListingMediaJob } from '../src/models/ListingMediaJob';
 
+// Mock the Canva export so tests exercise the pipeline wiring hermetically.
+jest.mock('../src/services/CanvaIntegrationService', () => ({
+  CanvaIntegrationService: {
+    exportDesign: jest.fn(async (folder: string, templateId: string) =>
+      `${folder}/live_canva_export_test_${templateId}.jpg`
+    ),
+  },
+}));
+
 describe('JustSoldPipelineService', () => {
   const originalEnv = process.env;
 
@@ -32,7 +41,7 @@ describe('JustSoldPipelineService', () => {
     expect(drafts[0]?.caption).toContain('123 Success Ln');
     expect(drafts[0]?.caption).toContain('#JustSold');
     expect(drafts[0]?.approvalStatus).toBe('Pending');
-    expect(drafts[0]?.imagePath).toBe('/mock/123 Success Ln/mock_canva_export_template_just_sold_default.jpg');
+    expect(drafts[0]?.imagePath).toBe('/mock/123 Success Ln/live_canva_export_test_template_just_sold_default.jpg');
   });
 
   it('should use custom template ID from environment if provided', async () => {
@@ -51,7 +60,7 @@ describe('JustSoldPipelineService', () => {
 
     const drafts = await JustSoldPipelineService.processJustSold(job);
 
-    expect(drafts[0]?.imagePath).toBe('/mock/456 Winner Blvd/mock_canva_export_custom-sold-template-123.jpg');
+    expect(drafts[0]?.imagePath).toBe('/mock/456 Winner Blvd/live_canva_export_test_custom-sold-template-123.jpg');
   });
 
   it('should throw an error if the job stage is not Just Sold', async () => {
