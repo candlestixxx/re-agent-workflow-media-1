@@ -46,7 +46,7 @@ export class ApprovalWorkflowService {
 
   public static approveJob(job: ListingMediaJob, reviewerId: string): ListingMediaJob {
     if (job.status !== 'Pending_Approval') {
-      throw new Error('Only jobs in Pending_Approval can be approved. Current: ' + job.status);
+      throw new Error("Only jobs in 'Pending_Approval' can be approved. Current: " + job.status);
     }
     return {
       ...job,
@@ -70,10 +70,10 @@ export class ApprovalWorkflowService {
 
   public static publishJob(job: ListingMediaJob): ListingMediaJob {
     if (job.status !== 'Approved') {
-      throw new Error('A job must be Approved before publish. Current: ' + job.status);
+      throw new Error("A job must be 'Approved' before it can be published. Current: " + job.status);
     }
     if (!job.approvedBy) {
-      throw new Error('Cannot publish without a recorded approver.');
+      throw new Error('A job cannot be published without a recorded approver.');
     }
     return {
       ...job,

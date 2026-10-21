@@ -6,6 +6,13 @@
   "exclude": ["frontend", "dist", "node_modules", "tests"],
   "compilerOptions": {
     "esModuleInterop": true,
+    // TS 6.0 deprecated the implicit node10 moduleResolution that
+    // `module: commonjs` implies. The recommended migration is module:
+    // node16/nodenext which requires ESM-style relative import extensions
+    // across the whole codebase. Silence the deprecation for now (TS 7 will
+    // force the migration). This also unblocked ts-jest (all 19 suites
+    // failed to run with TS5107 before this).
+    "ignoreDeprecations": "6.0",
     // File Layout
     "rootDir": "./",
     "outDir": "./dist",
